@@ -1,7 +1,7 @@
-import CubeScene from './components/CubeScene';
+import MainScene from './components/MainScene';
 
 function App() {
-  return <CubeScene />;
+  return <MainScene />;
 }
 
 export default App;
