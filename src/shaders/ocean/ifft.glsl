@@ -5,7 +5,9 @@ uniform float uStage;
 uniform int uDirection;            
 uniform vec2 resolution;
 
-// Funkcja pomocnicza: Mnożenie liczb zespolonych
+uniform bool uFinalPass;
+
+// Complex multiplication helper
 vec2 complexMult(vec2 a, vec2 b) {
     return vec2(
         a.x * b.x - a.y * b.y,
@@ -26,7 +28,7 @@ void main() {
 
     if (uDirection == 0) {
         
-        // Pobieramy dane motylka (uv dla tekstury motylkowej)
+        // Get twiddle data (uv for twiddle texture)
         vec2 twiddleUV = vec2((x + 0.5) / uTwiddleResolution.x, (uStage + 0.5) / uTwiddleResolution.y);
         vec4 twiddleData = texture2D(uTwiddleIndices, twiddleUV);
         
@@ -34,16 +36,16 @@ void main() {
         i1 = twiddleData.z;       
         i2 = twiddleData.w;       
 
-        // Odczyt z tekstury Ping-Pong 
+        // Read from Ping-Pong texture
         vec4 pData = texture2D(uPingPong, vec2((i1 + 0.5) / resolution.x, uv.y));
         vec4 qData = texture2D(uPingPong, vec2((i2 + 0.5) / resolution.x, uv.y));
         
-        // Operacja motylkowa
+        // Butterfly operation
         resultData.xy = pData.xy + complexMult(twiddle, qData.xy);
         resultData.zw = pData.zw + complexMult(twiddle, qData.zw);
 
     } else {        
-        // Pobieramy dane motylka 
+        // Get twiddle data
         vec2 twiddleUV = vec2((y + 0.5) / uTwiddleResolution.x, (uStage + 0.5) / uTwiddleResolution.y);
         vec4 twiddleData = texture2D(uTwiddleIndices, twiddleUV);
         
@@ -51,13 +53,20 @@ void main() {
         i1 = twiddleData.z;       
         i2 = twiddleData.w;       
 
-        // Odczyt z tekstury Ping-Pong 
+        // Read from Ping-Pong texture
         vec4 pData = texture2D(uPingPong, vec2(uv.x, (i1 + 0.5) / resolution.y));
         vec4 qData = texture2D(uPingPong, vec2(uv.x, (i2 + 0.5) / resolution.y));
         
-        // Operacja motylkowa
+        // Butterfly operation
         resultData.xy = pData.xy + complexMult(twiddle, qData.xy);
         resultData.zw = pData.zw + complexMult(twiddle, qData.zw);
+    }
+
+    // Apply checkerboard sign flip in the LAST pass
+    // This gives the output texture true values, ready for LinearFilter
+    if (uFinalPass) {
+        float signMultiplier = mod(x + y, 2.0) == 0.0 ? 1.0 : -1.0;
+        resultData *= signMultiplier;
     }
 
     gl_FragColor = resultData;

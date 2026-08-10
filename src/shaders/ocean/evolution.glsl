@@ -25,25 +25,25 @@ void main() {
         return;
     }
 
-    // Pobranie prekomputowanego widma H0
+    // Fetch precomputed H0 spectrum
     vec4 h0Data = texture2D(uH0, uv);
-    vec2 h0 = h0Data.xy;               // H0(k)
-    vec2 h0_minus_star = h0Data.zw;    // H0(-k)* 
+    vec2 h0 = h0Data.xy;               
+    vec2 h0_minus_star = h0Data.zw;    
 
-    // Relacja dyspersji uwzględniająca głębokość wody
+    // Dispersion relation with water depth
     float omega = sqrt(G * k * tanh(k * uDepth));
 
-    // Obrót fazy w czasie (Wzór Eulera: e^(iwt))
+    // Phase rotation over time (Euler's formula: e^(iwt))
     float cos_wt = cos(omega * uTime);
     float sin_wt = sin(omega * uTime);
     
     vec2 exp_iwt = vec2(cos_wt, sin_wt);
     vec2 exp_minusiwt = vec2(cos_wt, -sin_wt);
 
-    // Równanie ewolucji fal: h(k, t)
+    // Wave evolution equation: h(k, t)
     vec2 h_t = complexMult(h0, exp_iwt) + complexMult(h0_minus_star, exp_minusiwt);
 
-    // Generowanie przesunięć poziomych (X i Z) dla "ostrych fal"
+    // Generate horizontal displacements (X and Z) for sharp waves
     float kx_k = kx / k;
     float kz_k = kz / k;
     
@@ -51,7 +51,7 @@ void main() {
     vec2 H_X = vec2(h_t.y * kx_k, -h_t.x * kx_k);
     vec2 H_Z = vec2(h_t.y * kz_k, -h_t.x * kz_k);
 
-    // Pakowanie danych do IFFT
+    // Pack data for IFFT
     vec2 xy = vec2(H_X.x - H_Y.y, H_X.y + H_Y.x);
     vec2 zw = H_Z;
 

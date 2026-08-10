@@ -13,12 +13,13 @@ export const Ocean = () => {
 
   const uniforms = useMemo(
     () => ({
-      uDisplacementMap: { value: null }, // To zostanie nadpisane przez useFFT
+      uDisplacementMap: { value: null },
       uTime: { value: 0.0 },
-      uDepthColor: { value: new THREE.Color('#0b1b36') },
-      uSurfaceColor: { value: new THREE.Color('#1464b5') },
-      // Dodajemy wirtualne słońce do oświetlenia oceanu (potrzebne we fragment shader)
-      uSunPosition: { value: new THREE.Vector3(5.0, 5.0, 5.0).normalize() },
+      uDepthColor: { value: new THREE.Color('#061d3d') }, // Deep ocean blue
+      uSurfaceColor: { value: new THREE.Color('#1ca3ec') }, // Clear water blue
+      uSkyColor: { value: new THREE.Color('#87CEEB') },
+      uFoamColor: { value: new THREE.Color('#ffffff') },
+      uSunPosition: { value: new THREE.Vector3(5.0, 10.0, -10.0).normalize() },
     }),
     []
   );
@@ -31,8 +32,8 @@ export const Ocean = () => {
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]}>
-      {/* Siatka 256x256, aby pokrywała się z pikselami mapy GPGPU */}
-      <planeGeometry args={[100, 100, 256, 256]} />
+      {/* 256x256 grid, 1000x1000 size to accommodate large storm waves */}
+      <planeGeometry args={[1000, 1000, 512, 512]} />
       <shaderMaterial
         ref={materialRef}
         vertexShader={vertexShader}

@@ -31,8 +31,8 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
 
   useEffect(() => {
     const targetOptions: THREE.RenderTargetOptions = {
-      minFilter: THREE.NearestFilter,
-      magFilter: THREE.NearestFilter,
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter,
       format: THREE.RGBAFormat,
       type: gl.capabilities.isWebGL2 ? THREE.FloatType : THREE.HalfFloatType,
       depthBuffer: false,
@@ -43,13 +43,13 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
     const pingTarget = new THREE.WebGLRenderTarget(RESOLUTION, RESOLUTION, targetOptions);
     const pongTarget = new THREE.WebGLRenderTarget(RESOLUTION, RESOLUTION, targetOptions);
 
-    // --- FAZA 1: CPU PREKOMPUTACJA ---
+    // --- PHASE 1: CPU PRECOMPUTATION ---
     const tmaSettings: TMASettings = {
       resolution: RESOLUTION,
       size: 1000.0,
-      windSpeed: 15.0,
-      windDirection: Math.PI / 4, // 45 stopni
-      fetch: 100000.0,
+      windSpeed: 22.0,
+      windDirection: Math.PI / 4, 
+      fetch: 500000.0,
       depth: 200.0,
     };
 
@@ -65,7 +65,7 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
     );
     butterflyTexture.needsUpdate = true;
 
-    // --- FAZA 2: EWOLUCJA SHADER ---
+    // --- PHASE 2: EVOLUTION SHADER ---
     const evolutionMaterial = new THREE.ShaderMaterial({
       uniforms: {
         uH0: { value: h0Texture },
@@ -78,7 +78,7 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
       fragmentShader: evolutionFragmentShader,
     });
 
-    // --- FAZA 3: IFFT SHADER ---
+    // --- PHASE 3: IFFT SHADER ---
     const ifftMaterial = new THREE.ShaderMaterial({
       uniforms: {
         uPingPong: { value: null },
@@ -86,6 +86,7 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
         uTwiddleResolution: { value: new THREE.Vector2(RESOLUTION, STAGES) },
         uStage: { value: 0 },
         uDirection: { value: 0 },
+        uFinalPass: { value: false },
         resolution: { value: new THREE.Vector2(RESOLUTION, RESOLUTION) },
       },
       vertexShader: quadVertexShader,
@@ -107,15 +108,15 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
     };
   }, [gl]);
 
-  // ==== PĘTLA RENDEROWANIA ====
+  // ==== RENDER LOOP ====
   useFrame((state) => {
     if (!computeData.current) return;
     const { pingTarget, pongTarget, evolutionMaterial, ifftMaterial, quad } = computeData.current;
 
     // ==========================================
-    // ETAP 1: EWOLUCJA W CZASIE
+    // STAGE 1: TIME EVOLUTION
     // ==========================================
-    // Zapisujemy H(k, t) bezpośrednio do pingTarget
+    // Write H(k, t) directly to pingTarget
     evolutionMaterial.uniforms.uTime.value = state.clock.elapsedTime;
     quad.material = evolutionMaterial;
     gl.setRenderTarget(pingTarget);
@@ -127,12 +128,13 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
     quad.material = ifftMaterial;
 
     // ==========================================
-    // ETAP 2: PRZEJŚCIA POZIOME FFT (X)
+    // STAGE 2: HORIZONTAL FFT PASSES (X)
     // ==========================================
     ifftMaterial.uniforms.uDirection.value = 0;
     for (let i = 0; i < STAGES; i++) {
       ifftMaterial.uniforms.uStage.value = i;
       ifftMaterial.uniforms.uPingPong.value = readTarget.texture;
+      ifftMaterial.uniforms.uFinalPass.value = false;
 
       gl.setRenderTarget(writeTarget);
       quad.render(gl);
@@ -143,12 +145,14 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
     }
 
     // ==========================================
-    // ETAP 3: PRZEJŚCIA PIONOWE FFT (Y)
+    // STAGE 3: VERTICAL FFT PASSES (Y)
     // ==========================================
     ifftMaterial.uniforms.uDirection.value = 1;
     for (let i = 0; i < STAGES; i++) {
       ifftMaterial.uniforms.uStage.value = i;
       ifftMaterial.uniforms.uPingPong.value = readTarget.texture;
+      // Reverse checkerboard sign only in the last pass (Y direction, last stage)
+      ifftMaterial.uniforms.uFinalPass.value = (i === STAGES - 1);
 
       gl.setRenderTarget(writeTarget);
       quad.render(gl);
@@ -159,7 +163,7 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
     }
 
     // ==========================================
-    // ETAP 4: WYSYŁKA DO WIZUALIZACJI
+    // STAGE 4: OUTPUT TO VISUALIZATION
     // ==========================================
     gl.setRenderTarget(null);
     if (materialRef.current) {
