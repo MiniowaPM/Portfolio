@@ -36,6 +36,8 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
       format: THREE.RGBAFormat,
       type: gl.capabilities.isWebGL2 ? THREE.FloatType : THREE.HalfFloatType,
       depthBuffer: false,
+      wrapS: THREE.RepeatWrapping,
+      wrapT: THREE.RepeatWrapping,
     };
 
     const pingTarget = new THREE.WebGLRenderTarget(RESOLUTION, RESOLUTION, targetOptions);

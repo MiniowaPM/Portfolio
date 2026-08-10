@@ -3,8 +3,8 @@ uniform vec3 uSurfaceColor;
 uniform vec3 uSunPosition; 
 
 varying float vElevation;
-varying vec3 vNormal;
-varying vec3 vViewPosition;
+varying vec3 vWorldNormal;
+varying vec3 vWorldPosition;
 
 void main() {
     // Podstawowy kolor z głębi fali
@@ -13,8 +13,8 @@ void main() {
     vec3 albedo = mix(uDepthColor, uSurfaceColor, mixStrength);
 
     // Setup wektorów do modelu oświetlenia Blinna-Phonga
-    vec3 normal = normalize(vNormal);
-    vec3 viewDir = normalize(vViewPosition);
+    vec3 normal = normalize(vWorldNormal);
+    vec3 viewDir = normalize(cameraPosition - vWorldPosition);
     vec3 sunDir = normalize(uSunPosition);
             
     // (a) Światło rozproszone (Diffuse)

@@ -1,14 +1,14 @@
 uniform sampler2D uDisplacementMap;
 varying vec2 vUv;
-varying vec3 vNormal;
-varying vec3 vViewPosition;
+varying vec3 vWorldNormal;
+varying vec3 vWorldPosition;
 varying float vElevation;
 
 // Bezpieczna funkcja odwracająca szachownicę znaków z IFFT
 float getSign(vec2 uv) {
     // Obliczamy dokładny indeks piksela z zabezpieczeniem przed krawędziami
     vec2 index = floor(uv * 256.0 + 0.5);
-    index = clamp(index, 0.0, 255.0); 
+    index = mod(index, 256.0); // Zamiast clamp używamy mod dla poprawnego powtarzania
     return mod(index.x + index.y, 2.0) == 0.0 ? 1.0 : -1.0;
 }
 
@@ -20,13 +20,21 @@ void main() {
     // Wynik z FFT (uDisplacementMap) jest już domyślnie w metrach!
     float choppiness = 1.2; // Ostrość wierzchołków fal (1.0 - 1.5)
 
-    // Pobieramy wektory i naprawiamy "kolce" funkcją getSign
-    vec2 uvRight = vUv + vec2(texel, 0.0);
-    vec2 uvUp = vUv + vec2(0.0, texel);
+    // Center the UVs to strictly sample texel centers without edge interpolation issues
+    vec2 centerUv = vUv + 0.5 * texel;
+    vec2 uvRight = centerUv + vec2(texel, 0.0);
+    vec2 uvUp = centerUv + vec2(0.0, texel);
     
-    vec3 disp = texture2D(uDisplacementMap, vUv).rgb * getSign(vUv);
-    vec3 dispRight = texture2D(uDisplacementMap, uvRight).rgb * getSign(uvRight);
-    vec3 dispUp = texture2D(uDisplacementMap, uvUp).rgb * getSign(uvUp);
+    // Używamy vUv do getSign, aby zachować starą logikę sprawdzania indeksów
+    vec3 disp = texture2D(uDisplacementMap, centerUv).rgb * getSign(vUv);
+    vec3 dispRight = texture2D(uDisplacementMap, uvRight).rgb * getSign(vUv + vec2(texel, 0.0));
+    vec3 dispUp = texture2D(uDisplacementMap, uvUp).rgb * getSign(vUv + vec2(0.0, texel));
+
+    // Skalujemy przemieszczenie (FFT generuje fale dla obszaru 1000m, nasza siatka ma 100m)
+    float scale = 100.0 / 1000.0;
+    disp *= scale;
+    dispRight *= scale;
+    dispUp *= scale;
 
     float step = 100.0 / 256.0; // Odległość fizyczna między wierzchołkami (w metrach)
 
@@ -56,11 +64,12 @@ void main() {
     vec3 localNormal = normalize(cross(dx, dy));
 
     // Przekazanie danych do Fragment Shadera
-    vNormal = normalMatrix * localNormal;
+    vec4 worldPos = modelMatrix * vec4(finalPos, 1.0);
+    vWorldPosition = worldPos.xyz;
+    
+    // Convert local normal to world space normal
+    vWorldNormal = normalize((modelMatrix * vec4(localNormal, 0.0)).xyz);
     vElevation = disp.y; 
 
-    // Ostateczna pozycja
-    vec4 modelViewPosition = modelViewMatrix * vec4(finalPos, 1.0);
-    vViewPosition = -modelViewPosition.xyz;
-    gl_Position = projectionMatrix * modelViewPosition;
+    gl_Position = projectionMatrix * viewMatrix * worldPos;
 }
