@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber';
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { useFFT } from '../shaders/ocean/useFFT';
+import { useFFT } from '../hooks/useFFT';
 
 import fragmentShader from '../shaders/ocean/fragment.glsl';
 import vertexShader from '../shaders/ocean/vertex.glsl';
@@ -24,6 +24,42 @@ export const Ocean = () => {
     []
   );
 
+  // const offsets = [
+  //   [-500, -500], [0, -500], [500, -500],
+  //   [-500, 0], [0, 0], [500, 0],
+  //   [-500, 500],[0, 500], [500, 500],
+  // ];
+
+  const offsets = useMemo(() => {
+    const grid = [];
+    const gridSize = 4;
+    const tileSize = 500;
+
+    for (let x = -gridSize; x <= gridSize; x++) {
+      for (let z = -gridSize; z <= gridSize; z++) {
+        grid.push([x * tileSize, z * tileSize]);
+      }
+    }
+    return grid;
+  }, []);
+
+  const oceanGeometry = useMemo(() => new THREE.PlaneGeometry(500, 500, 512, 512), []);
+
+  const oceanMaterial = useMemo(() => {
+    const material = new THREE.ShaderMaterial({
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
+      uniforms: uniforms,
+      wireframe: false,
+    });
+
+    return material;
+  }, [uniforms]);
+
+  useEffect(() => {
+    materialRef.current = oceanMaterial;
+  }, [oceanMaterial]);
+
   useFrame((state) => {
     if (materialRef.current) {
       materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
@@ -31,16 +67,16 @@ export const Ocean = () => {
   });
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]}>
-      {/* 256x256 grid, 1000x1000 size to accommodate large storm waves */}
-      <planeGeometry args={[1000, 1000, 512, 512]} />
-      <shaderMaterial
-        ref={materialRef}
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        uniforms={uniforms}
-        wireframe={false}
-      />
-    </mesh>
+    <group>
+      {offsets.map(([x, z], index) => (
+        <mesh
+          key={index}
+          position={[x, 0, z]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          geometry={oceanGeometry}
+          material={oceanMaterial}
+        />
+      ))}
+    </group>
   );
 };

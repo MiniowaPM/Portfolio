@@ -3,11 +3,11 @@ import { useEffect, useRef, type RefObject } from 'react';
 import * as THREE from 'three';
 import { FullScreenQuad } from 'three-stdlib';
 
-import evolutionFragmentShader from './evolution.glsl';
-import ifftFragmentShader from './ifft.glsl';
-import { generateButterflyData, generateTMASpectrum, type TMASettings } from './tma';
+import evolutionFragmentShader from '../shaders/ocean/evolution.glsl';
+import ifftFragmentShader from '../shaders/ocean/ifft.glsl';
+import { generateButterflyData, generateTMASpectrum, type TMASettings } from '../shaders/ocean/tma';
 
-const RESOLUTION = 256;
+const RESOLUTION = 512;
 const STAGES = Math.log2(RESOLUTION);
 
 const quadVertexShader = `
@@ -17,6 +17,12 @@ const quadVertexShader = `
     gl_Position = vec4(position, 1.0);
   }
 `;
+
+export const oceanPhysics = {
+  readTarget: null as THREE.WebGLRenderTarget | null,
+  size: 500.0,
+  resolution: RESOLUTION,
+};
 
 export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
   const { gl } = useThree();
@@ -48,7 +54,7 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
       resolution: RESOLUTION,
       size: 1000.0,
       windSpeed: 22.0,
-      windDirection: Math.PI / 4, 
+      windDirection: Math.PI / 4,
       fetch: 500000.0,
       depth: 200.0,
     };
@@ -152,7 +158,7 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
       ifftMaterial.uniforms.uStage.value = i;
       ifftMaterial.uniforms.uPingPong.value = readTarget.texture;
       // Reverse checkerboard sign only in the last pass (Y direction, last stage)
-      ifftMaterial.uniforms.uFinalPass.value = (i === STAGES - 1);
+      ifftMaterial.uniforms.uFinalPass.value = i === STAGES - 1;
 
       gl.setRenderTarget(writeTarget);
       quad.render(gl);
@@ -169,5 +175,8 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
     if (materialRef.current) {
       materialRef.current.uniforms.uDisplacementMap.value = readTarget.texture;
     }
+
+    // Store the final read target for ship buoyancy
+    oceanPhysics.readTarget = readTarget;
   });
 };
