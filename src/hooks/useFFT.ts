@@ -52,10 +52,10 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
     // --- PHASE 1: CPU PRECOMPUTATION ---
     const tmaSettings: TMASettings = {
       resolution: RESOLUTION,
-      size: 1000.0,
-      windSpeed: 22.0,
+      size: 500.0,
+      windSpeed: 4,
       windDirection: Math.PI / 4,
-      fetch: 500000.0,
+      fetch: 5000.0,
       depth: 200.0,
     };
 

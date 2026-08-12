@@ -20,6 +20,8 @@ export const useShipPhysics = (
     yaw: 0,
   });
 
+  const waveQuatRef = useRef(new THREE.Quaternion());
+
   useFrame((_, delta) => {
     if (!objectRef.current || !oceanPhysics.readTarget) return;
 
@@ -83,27 +85,42 @@ export const useShipPhysics = (
 
     const heightBottom = THREE.MathUtils.lerp(y00, y10, tx);
     const heightTop = THREE.MathUtils.lerp(y01, y11, tx);
-    const exactHeight = THREE.MathUtils.lerp(heightBottom, heightTop, ty);
+    const rawHeight = THREE.MathUtils.lerp(heightBottom, heightTop, ty);
 
-    // Add float offset to the ship's position
-    ship.position.y = exactHeight + floatOffset;
+    const displacementScale = 1.0;
+    const exactHeight = rawHeight * displacementScale;
+
+    const heaveDamping = 10.0;
+
+    ship.position.y = THREE.MathUtils.lerp(
+      ship.position.y,
+      exactHeight + floatOffset,
+      heaveDamping * delta
+    );
 
     // Rotate the ship to align with the wave normal
-    const dx = (y10 - y00 + y11 - y01) * 0.5;
-    const dz = (y01 - y00 + y11 - y10) * 0.5;
+    const dx = (y10 - y00 + y11 - y01) * 0.5 * displacementScale;
+    const dz = (y01 - y00 + y11 - y10) * 0.5 * displacementScale;
     const step = size / resolution;
 
-    const waveNormal = new THREE.Vector3(-dx * 0.4, step, dz * 0.4).normalize();
+    const shipLengthFactor = 0.5;
 
-    // YAW
+    const waveNormal = new THREE.Vector3(
+      -dx * shipLengthFactor,
+      step,
+      dz * shipLengthFactor
+    ).normalize(); // YAW
+
+    const targetWaveQuat = new THREE.Quaternion().setFromUnitVectors(upVector, waveNormal);
+
+    const pitchRollSpeed = 2.3;
+    waveQuatRef.current.slerp(targetWaveQuat, pitchRollSpeed * delta);
+
     const yawQuat = new THREE.Quaternion().setFromAxisAngle(upVector, state.current.yaw);
-    // PITCH/ROLL
-    const waveQuat = new THREE.Quaternion().setFromUnitVectors(upVector, waveNormal);
 
-    // Combine the yaw and wave quaternions to get the final orientation
-    const targetQuat = waveQuat.multiply(yawQuat);
+    const finalQuat = waveQuatRef.current.clone().multiply(yawQuat);
 
-    ship.quaternion.slerp(targetQuat, 0.1);
+    ship.quaternion.copy(finalQuat);
 
     // Camera controls - orbit camera movement
     if (controls) {

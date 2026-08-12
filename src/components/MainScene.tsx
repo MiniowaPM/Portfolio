@@ -7,11 +7,17 @@ function MainScene() {
   return (
     <div className="h-screen w-screen bg-gray-900">
       <Canvas camera={{ position: [0, 20, 30], fov: 45, far: 2000 }} shadows>
-        <color attach="background" args={['#87CEEB']} />
-        <Sky distance={450000} sunPosition={[5, 1, 8]} inclination={0} azimuth={0.25} />
+        <Sky
+          distance={450000}
+          sunPosition={[5, 1, 8]}
+          inclination={0}
+          azimuth={0.25}
+          turbidity={0.1}
+          rayleigh={0.5}
+        />
         <Environment preset="city" />
         <ambientLight intensity={1.5} />
-        <directionalLight position={[5, 10, 5]} intensity={1} />
+        <directionalLight position={[5, 1, 8]} intensity={1} />
         <OrbitControls
           makeDefault
           enablePan={false}

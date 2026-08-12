@@ -24,12 +24,6 @@ export const Ocean = () => {
     []
   );
 
-  // const offsets = [
-  //   [-500, -500], [0, -500], [500, -500],
-  //   [-500, 0], [0, 0], [500, 0],
-  //   [-500, 500],[0, 500], [500, 500],
-  // ];
-
   const offsets = useMemo(() => {
     const grid = [];
     const gridSize = 4;

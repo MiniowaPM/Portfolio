@@ -5,6 +5,7 @@ Command: npx gltfjsx@6.5.3 public/models/ship.glb -t
 
 import { useGLTF } from '@react-three/drei';
 import type { ThreeElements } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import * as React from 'react';
 import * as THREE from 'three';
 import type { GLTF } from 'three-stdlib';
@@ -41,9 +42,40 @@ export function Ship(props: ThreeElements['group']) {
 
   useShipPhysics(shipRef, -1);
 
+  React.useEffect(() => {
+    Object.values(materials).forEach((mat) => {
+      if (mat) {
+        mat.transparent = true;
+        mat.alphaTest = 0.01;
+      }
+    });
+  }, [materials]);
+
+  useFrame((state) => {
+    if (shipRef.current) {
+      const cam = state.camera.position;
+      const shipPos = shipRef.current.position;
+
+      const dist = cam.distanceTo(shipPos);
+
+      const horizonFade = THREE.MathUtils.clamp((dist - 900.0) / 600.0, 0.0, 1.0);
+
+      const altitudeFade = THREE.MathUtils.clamp((cam.y - 190.0) / 100.0, 0.0, 1.0);
+
+      const totalFade = Math.max(horizonFade, altitudeFade);
+      const currentOpacity = 1.0 - totalFade;
+
+      Object.values(materials).forEach((mat) => {
+        if (mat) {
+          mat.opacity = currentOpacity;
+        }
+      });
+    }
+  });
+
   return (
     <group ref={shipRef} {...props} dispose={null}>
-      <group rotation={[0, 90, 0]} position={[0, 0, 0]} scale={0.005}>
+      <group rotation={[0, 90, 0]} position={[0, 0, -4]} scale={0.005}>
         <mesh geometry={nodes['12219_boat_v2_L2_1'].geometry} material={materials.white} />
         <mesh
           geometry={nodes['12219_boat_v2_L2_2'].geometry}
