@@ -1,6 +1,7 @@
 import { Environment, OrbitControls, Sky } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Ocean } from '../components/Ocean';
+import { Rain } from '../components/Rain';
 import { Ship } from '../components/Ship';
 
 function MainScene() {
@@ -27,6 +28,7 @@ function MainScene() {
         />{' '}
         <Ocean />
         <Ship />
+        <Rain active={false} count={50000} speed={0.5} color="#8282ff" />
       </Canvas>
 
       {/* Warstwa UI (nakładka HTML/Tailwind) */}

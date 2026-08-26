@@ -20,11 +20,40 @@ export interface TMASettings {
   depth: number; // Głębokość wody [m]
 }
 
-export const generateTMASpectrum = (settings: TMASettings): THREE.DataTexture => {
+export interface TMAContext {
+  texture: THREE.DataTexture;
+  phases: { xi1: number; xi2: number }[]; // Bufor na stałe fazy losowe
+}
+
+export const initTMASpectrum = (settings: TMASettings): TMAContext => {
+  const { resolution } = settings;
+  const phases = new Array(resolution * resolution);
+
+  for (let i = 0; i < resolution * resolution; i++) {
+    const [xi1, xi2] = gaussianRandom();
+    phases[i] = { xi1, xi2 };
+  }
+
+  const data = new Float32Array(resolution * resolution * 4);
+  const texture = new THREE.DataTexture(
+    data,
+    resolution,
+    resolution,
+    THREE.RGBAFormat,
+    THREE.FloatType
+  );
+
+  const context = { texture, phases };
+  updateTMASpectrum(settings, context);
+
+  return context;
+};
+
+export const updateTMASpectrum = (settings: TMASettings, context: TMAContext): void => {
   const { resolution, size, windSpeed, windDirection, fetch, depth } = settings;
 
   // Tablica Float32 dla tekstury RGBA (4 kanały na piksel)
-  const data = new Float32Array(resolution * resolution * 4);
+  const data = context.texture.image.data as Float32Array;
   const g = 9.81;
 
   // Parametry modelu JONSWAP/TMA
@@ -86,11 +115,11 @@ export const generateTMASpectrum = (settings: TMASettings): THREE.DataTexture =>
       const dK = (2.0 * Math.PI) / size; // Krok siatki
       const amp = Math.sqrt(S_TMA * directionalSpreading(kx, kz) * dK * dK);
 
-      const [xi1, xi2] = gaussianRandom();
-      const h0_real = (xi1 * amp) / Math.sqrt(2.0);
-      const h0_imag = (xi2 * amp) / Math.sqrt(2.0);
-
-      h0Data[index] = { real: h0_real, imag: h0_imag };
+      const { xi1, xi2 } = context.phases[index];
+      h0Data[index] = {
+        real: (xi1 * amp) / Math.sqrt(2.0),
+        imag: (xi2 * amp) / Math.sqrt(2.0),
+      };
     }
   }
 
@@ -116,15 +145,7 @@ export const generateTMASpectrum = (settings: TMASettings): THREE.DataTexture =>
     }
   }
 
-  const texture = new THREE.DataTexture(
-    data,
-    resolution,
-    resolution,
-    THREE.RGBAFormat,
-    THREE.FloatType
-  );
-  texture.needsUpdate = true;
-  return texture;
+  context.texture.needsUpdate = true;
 };
 
 export function U10ToFetch(windSpeed: number, fetch: number, g: number) {

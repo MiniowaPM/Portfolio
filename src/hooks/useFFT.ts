@@ -5,7 +5,13 @@ import { FullScreenQuad } from 'three-stdlib';
 
 import evolutionFragmentShader from '../shaders/ocean/evolution.glsl';
 import ifftFragmentShader from '../shaders/ocean/ifft.glsl';
-import { generateButterflyData, generateTMASpectrum, type TMASettings } from '../shaders/ocean/tma';
+import {
+  generateButterflyData,
+  initTMASpectrum,
+  updateTMASpectrum,
+  type TMAContext,
+  type TMASettings,
+} from '../shaders/ocean/tma';
 
 const RESOLUTION = 512;
 const STAGES = Math.log2(RESOLUTION);
@@ -24,7 +30,10 @@ export const oceanPhysics = {
   resolution: RESOLUTION,
 };
 
-export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
+export const useFFT = (
+  materialRef: RefObject<THREE.ShaderMaterial | null>,
+  targetSettings: TMASettings
+) => {
   const { gl } = useThree();
 
   const computeData = useRef<{
@@ -33,7 +42,10 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
     evolutionMaterial: THREE.ShaderMaterial;
     ifftMaterial: THREE.ShaderMaterial;
     quad: FullScreenQuad;
+    tmaContext: TMAContext;
   } | null>(null);
+
+  const currentSettings = useRef<TMASettings>({ ...targetSettings });
 
   useEffect(() => {
     const targetOptions: THREE.RenderTargetOptions = {
@@ -49,17 +61,7 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
     const pingTarget = new THREE.WebGLRenderTarget(RESOLUTION, RESOLUTION, targetOptions);
     const pongTarget = new THREE.WebGLRenderTarget(RESOLUTION, RESOLUTION, targetOptions);
 
-    // --- PHASE 1: CPU PRECOMPUTATION ---
-    const tmaSettings: TMASettings = {
-      resolution: RESOLUTION,
-      size: 500.0,
-      windSpeed: 4,
-      windDirection: Math.PI / 4,
-      fetch: 5000.0,
-      depth: 200.0,
-    };
-
-    const h0Texture = generateTMASpectrum(tmaSettings);
+    const tmaContext = initTMASpectrum(currentSettings.current);
 
     const butterflyData = generateButterflyData(RESOLUTION);
     const butterflyTexture = new THREE.DataTexture(
@@ -74,10 +76,10 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
     // --- PHASE 2: EVOLUTION SHADER ---
     const evolutionMaterial = new THREE.ShaderMaterial({
       uniforms: {
-        uH0: { value: h0Texture },
+        uH0: { value: tmaContext.texture },
         uTime: { value: 0 },
-        uSize: { value: tmaSettings.size },
-        uDepth: { value: tmaSettings.depth },
+        uSize: { value: currentSettings.current.size },
+        uDepth: { value: currentSettings.current.depth },
         resolution: { value: new THREE.Vector2(RESOLUTION, RESOLUTION) },
       },
       vertexShader: quadVertexShader,
@@ -101,7 +103,14 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
 
     const quad = new FullScreenQuad(evolutionMaterial);
 
-    computeData.current = { pingTarget, pongTarget, evolutionMaterial, ifftMaterial, quad };
+    computeData.current = {
+      pingTarget,
+      pongTarget,
+      evolutionMaterial,
+      ifftMaterial,
+      quad,
+      tmaContext,
+    };
 
     return () => {
       pingTarget.dispose();
@@ -109,60 +118,66 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
       evolutionMaterial.dispose();
       ifftMaterial.dispose();
       quad.dispose();
-      h0Texture.dispose();
+      tmaContext.texture.dispose();
       butterflyTexture.dispose();
     };
   }, [gl]);
 
   // ==== RENDER LOOP ====
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (!computeData.current) return;
-    const { pingTarget, pongTarget, evolutionMaterial, ifftMaterial, quad } = computeData.current;
+    const { pingTarget, pongTarget, evolutionMaterial, ifftMaterial, quad, tmaContext } =
+      computeData.current;
+
+    // ==========================================
+    // STAGE 0: DYNAMIC WEATHER UPDATE (LERP)
+    // ==========================================
+    const lerpSpeed = delta * 0.5;
+    currentSettings.current.windSpeed = THREE.MathUtils.lerp(
+      currentSettings.current.windSpeed,
+      targetSettings.windSpeed,
+      lerpSpeed
+    );
+    currentSettings.current.fetch = THREE.MathUtils.lerp(
+      currentSettings.current.fetch,
+      targetSettings.fetch,
+      lerpSpeed
+    );
+
+    // Nadpisujemy teksturę H0 w pamięci nowymi, zinterpolowanymi wartościami
+    updateTMASpectrum(currentSettings.current, tmaContext);
 
     // ==========================================
     // STAGE 1: TIME EVOLUTION
     // ==========================================
-    // Write H(k, t) directly to pingTarget
     evolutionMaterial.uniforms.uTime.value = state.clock.elapsedTime;
     quad.material = evolutionMaterial;
     gl.setRenderTarget(pingTarget);
     quad.render(gl);
 
-    // Ustawiamy pętlę pod IFFT
     let readTarget = pingTarget;
     let writeTarget = pongTarget;
     quad.material = ifftMaterial;
 
-    // ==========================================
-    // STAGE 2: HORIZONTAL FFT PASSES (X)
-    // ==========================================
     ifftMaterial.uniforms.uDirection.value = 0;
     for (let i = 0; i < STAGES; i++) {
       ifftMaterial.uniforms.uStage.value = i;
       ifftMaterial.uniforms.uPingPong.value = readTarget.texture;
       ifftMaterial.uniforms.uFinalPass.value = false;
-
       gl.setRenderTarget(writeTarget);
       quad.render(gl);
-
       const temp = readTarget;
       readTarget = writeTarget;
       writeTarget = temp;
     }
 
-    // ==========================================
-    // STAGE 3: VERTICAL FFT PASSES (Y)
-    // ==========================================
     ifftMaterial.uniforms.uDirection.value = 1;
     for (let i = 0; i < STAGES; i++) {
       ifftMaterial.uniforms.uStage.value = i;
       ifftMaterial.uniforms.uPingPong.value = readTarget.texture;
-      // Reverse checkerboard sign only in the last pass (Y direction, last stage)
       ifftMaterial.uniforms.uFinalPass.value = i === STAGES - 1;
-
       gl.setRenderTarget(writeTarget);
       quad.render(gl);
-
       const temp = readTarget;
       readTarget = writeTarget;
       writeTarget = temp;
@@ -176,7 +191,6 @@ export const useFFT = (materialRef: RefObject<THREE.ShaderMaterial | null>) => {
       materialRef.current.uniforms.uDisplacementMap.value = readTarget.texture;
     }
 
-    // Store the final read target for ship buoyancy
     oceanPhysics.readTarget = readTarget;
   });
 };
