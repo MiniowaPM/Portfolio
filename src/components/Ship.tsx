@@ -4,7 +4,6 @@ Command: npx gltfjsx@6.5.3 public/models/ship.glb -t
 */
 
 import { useGLTF } from '@react-three/drei';
-import type { ThreeElements } from '@react-three/fiber';
 import { useFrame } from '@react-three/fiber';
 import * as React from 'react';
 import * as THREE from 'three';
@@ -35,7 +34,11 @@ type GLTFResult = GLTF & {
   animations: THREE.AnimationClip[];
 };
 
-export function Ship(props: ThreeElements['group']) {
+type ShipProps = React.ComponentProps<'group'> & {
+  shipPositionRef?: React.RefObject<THREE.Vector3 | null>;
+};
+
+export function Ship({ shipPositionRef, ...props }: ShipProps) {
   const { nodes, materials } = useGLTF('/models/ship.glb') as unknown as GLTFResult;
 
   const shipRef = React.useRef<THREE.Group>(null);
@@ -53,6 +56,10 @@ export function Ship(props: ThreeElements['group']) {
 
   useFrame((state) => {
     if (shipRef.current) {
+      if (shipPositionRef && shipPositionRef.current) {
+        shipPositionRef.current.copy(shipRef.current.position);
+      }
+
       const cam = state.camera.position;
       const shipPos = shipRef.current.position;
 
