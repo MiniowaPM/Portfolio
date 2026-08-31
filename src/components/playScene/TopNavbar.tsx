@@ -1,5 +1,5 @@
 import React from 'react';
-import { ISLANDS, type IslandData } from '../data/islandsData';
+import { ISLANDS, type IslandData } from '../../data/islandsData';
 
 interface TopNavbarProps {
   activeIsland: IslandData | null;

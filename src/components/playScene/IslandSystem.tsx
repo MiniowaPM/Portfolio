@@ -2,7 +2,7 @@ import { useFrame } from '@react-three/fiber';
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 import * as THREE from 'three';
-import { type IslandData, ISLANDS } from '../data/islandsData';
+import { type IslandData, ISLANDS } from '../../data/islandsData';
 
 interface IslandSystemProps {
   shipPositionRef: React.MutableRefObject<THREE.Vector3>;

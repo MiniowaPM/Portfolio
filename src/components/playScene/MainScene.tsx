@@ -3,15 +3,15 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { BottomTelemetryBar } from '../components/BottomTelemetryBar';
-import { Compass } from '../components/Compass';
-import { IslandHUD, IslandMeshes } from '../components/IslandSystem';
-import { Ocean } from '../components/Ocean';
-import { Rain } from '../components/Rain';
-import { Ship } from '../components/Ship';
-import { TopNavbar } from '../components/TopNavbar';
-import { type IslandData } from '../data/islandsData';
+import { type IslandData } from '../../data/islandsData';
+import { BottomTelemetryBar } from './BottomTelemetryBar';
+import { Compass } from './Compass';
 import { ControlPanel } from './ControlPanel';
+import { IslandHUD, IslandMeshes } from './IslandSystem';
+import { Ocean } from './Ocean';
+import { Rain } from './Rain';
+import { Ship } from './Ship';
+import { TopNavbar } from './TopNavbar';
 import { WeatherEffects } from './WetherEffect';
 
 function MainScene() {

@@ -1,8 +1,8 @@
 import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import fragmentShader from '../shaders/rain/fragment.glsl';
-import vertexShader from '../shaders/rain/vertex.glsl';
+import fragmentShader from '../../shaders/rain/fragment.glsl';
+import vertexShader from '../../shaders/rain/vertex.glsl';
 
 const generateRainData = (count: number) => {
   const pos = new Float32Array(count * 3);

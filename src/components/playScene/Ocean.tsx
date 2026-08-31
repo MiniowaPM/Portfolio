@@ -1,10 +1,10 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { useFFT } from '../hooks/useFFT';
+import { useFFT } from '../../hooks/useFFT';
 
-import fragmentShader from '../shaders/ocean/fragment.glsl';
-import vertexShader from '../shaders/ocean/vertex.glsl';
+import fragmentShader from '../../shaders/ocean/fragment.glsl';
+import vertexShader from '../../shaders/ocean/vertex.glsl';
 
 export const Ocean = ({
   windSpeed = 4.0,

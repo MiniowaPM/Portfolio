@@ -8,7 +8,7 @@ import { useFrame } from '@react-three/fiber';
 import * as React from 'react';
 import * as THREE from 'three';
 import type { GLTF } from 'three-stdlib';
-import { useShipPhysics } from '../hooks/useShipPhysics';
+import { useShipPhysics } from '../../hooks/useShipPhysics';
 
 type GLTFResult = GLTF & {
   nodes: {
