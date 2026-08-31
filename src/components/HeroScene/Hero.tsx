@@ -3,7 +3,7 @@ import Lenis from '@studio-freight/lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import React, { useEffect, useRef, useState } from 'react';
-import { useRouteTheme } from '../../../hooks/useRouteTheme';
+import { useRouteTheme } from '../../hooks/useRouteTheme';
 import { AvatarScene } from './Scene';
 
 gsap.registerPlugin(ScrollTrigger);

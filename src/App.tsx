@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Hero from './components/playScene/HeroScene/Hero';
+import Hero from './components/HeroScene/Hero';
 import MainScene from './components/playScene/MainScene';
 
 function App() {
