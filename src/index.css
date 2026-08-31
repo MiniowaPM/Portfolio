@@ -2,8 +2,14 @@
 @plugin 'daisyui';
 
 @plugin 'daisyui/theme' {
+  name: 'retro';
+}
+@plugin 'daisyui/theme' {
+  name: 'abyss';
+}
+
+@plugin 'daisyui/theme' {
   name: 'calm';
-  default: true;
   --color-primary: #1ca3ec;
   --color-secondary: #fcd34d;
   --color-accent: #0ea5e9;
