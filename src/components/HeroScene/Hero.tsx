@@ -1,3 +1,4 @@
+import { ContactShadows, Sparkles } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import Lenis from '@studio-freight/lenis';
 import gsap from 'gsap';
@@ -106,15 +107,28 @@ export const Hero: React.FC = () => {
       {/* Canvas 3D */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <Canvas eventSource={mainRef} camera={{ position: [0, 0, 5], fov: 45 }}>
-          <ambientLight intensity={0.8} />
-          <directionalLight position={[5, 5, 5]} intensity={1.5} />
+          <directionalLight position={[2, 3, 4]} intensity={1.5} color="#fff0e0" />{' '}
+          <ambientLight intensity={1.5} color="#ffd4b8" />{' '}
+          <ContactShadows position={[0, -2, 0]} opacity={0.6} scale={10} blur={2} far={4} />
+          <Sparkles
+            count={400}
+            scale={[60, 20, 10]}
+            position={[22.5, 0, 0]}
+            size={4}
+            speed={0.6}
+            opacity={0.3}
+            color="#ffd4b8"
+          />{' '}
           <AvatarScene scrollRef={scrollProgress} />
         </Canvas>
       </div>
 
       {/* Kontener horyzontalny */}
       <div ref={containerRef} className="h-screen w-screen overflow-hidden">
-        <div ref={trackRef} className="flex h-full w-[400vw] will-change-transform">
+        <div
+          ref={trackRef}
+          className="pointer-events-none flex h-full w-[400vw] will-change-transform"
+        >
           <section className="slide-panel flex h-full w-screen flex-col justify-center px-8 md:pr-[40vw] md:pl-20">
             {' '}
             <h1 className="mb-4 text-6xl font-bold">Cześć, jestem Twórcą</h1>

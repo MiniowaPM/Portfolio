@@ -4,8 +4,8 @@ Command: npx gltfjsx@6.5.3 public/models/avatar.glb -t
 */
 
 import { useAnimations, useGLTF } from '@react-three/drei';
-import { useGraph } from '@react-three/fiber';
-import React, { useEffect } from 'react';
+import { useFrame, useGraph } from '@react-three/fiber';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { type GLTF, SkeletonUtils } from 'three-stdlib';
 
@@ -13,6 +13,11 @@ type ActionName = 'Idle' | 'JumpAttack' | 'Typing' | 'Walking' | 'Waving';
 
 interface GLTFAction extends THREE.AnimationClip {
   name: ActionName;
+}
+
+interface AvatarProps {
+  animation: ActionName;
+  walkSpeedRef: React.RefObject<number>;
 }
 
 type GLTFResult = GLTF & {
@@ -50,15 +55,23 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[];
 };
 
-export function Avatar(props: any) {
+export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
   const group = React.useRef<THREE.Group>(null);
-
   const { scene, animations } = useGLTF('/models/avatar.glb');
-
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
-
   const { nodes, materials } = useGraph(clone) as unknown as GLTFResult;
   const { actions } = useAnimations(animations, group);
+  const initialHeadRot = useRef<THREE.Euler | null>(null);
+
+  useEffect(() => {
+    animations.forEach((clip) => {
+      if (clip.name === 'Idle' || clip.name === 'Waving') {
+        clip.tracks = clip.tracks.filter(
+          (track) => !track.name.includes('Head') && !track.name.includes('Neck')
+        );
+      }
+    });
+  }, [animations]);
 
   useEffect(() => {
     Object.values(materials).forEach((material) => {
@@ -68,6 +81,58 @@ export function Avatar(props: any) {
       material.needsUpdate = true;
     });
   }, [actions, materials]);
+
+  useEffect(() => {
+    const currentAction = actions[animation];
+
+    if (currentAction) {
+      currentAction.reset().fadeIn(0.5).play();
+
+      return () => {
+        currentAction.fadeOut(0.5);
+      };
+    }
+  }, [animation, actions]);
+
+  useFrame((state, delta) => {
+    const walkingAction = actions['Walking'];
+    if (animation === 'Walking' && walkingAction && walkSpeedRef) {
+      walkingAction.setEffectiveTimeScale(walkSpeedRef.current);
+    }
+
+    if (!group.current) return;
+    const head =
+      group.current.getObjectByName('mixamorigHead') ||
+      group.current.getObjectByName('mixamorigNeck');
+
+    if (head) {
+      if (!initialHeadRot.current) {
+        initialHeadRot.current = head.rotation.clone();
+      }
+
+      if (animation === 'Idle' || animation === 'Waving') {
+        const targetPitch = initialHeadRot.current.x + -state.pointer.y * 0.4;
+        const targetYaw = initialHeadRot.current.y + state.pointer.x * 0.6;
+
+        head.rotation.x = THREE.MathUtils.lerp(head.rotation.x, targetPitch, delta * 6);
+        head.rotation.y = THREE.MathUtils.lerp(head.rotation.y, targetYaw, delta * 6);
+
+        head.matrixAutoUpdate = true;
+        head.updateMatrix();
+      } else {
+        head.rotation.x = THREE.MathUtils.lerp(
+          head.rotation.x,
+          initialHeadRot.current.x,
+          delta * 6
+        );
+        head.rotation.y = THREE.MathUtils.lerp(
+          head.rotation.y,
+          initialHeadRot.current.y,
+          delta * 6
+        );
+      }
+    }
+  });
 
   return (
     <group ref={group} {...props} dispose={null}>
