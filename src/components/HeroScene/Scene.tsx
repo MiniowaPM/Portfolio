@@ -36,9 +36,17 @@ export const AvatarScene: React.FC<AvatarSceneProps> = ({ scrollRef }) => {
 
     const scroll = scrollRef.current;
 
-    smoothedMouse.current.lerp(state.pointer, 0.1);
+    let customScrollX: number;
 
-    const baseCameraX = scroll * MAX_SCENE_WIDTH;
+    if (scroll < 0.5) {
+      customScrollX = (scroll / 0.5) * 0.6666;
+    } else if (scroll >= 0.5 && scroll < 0.75) {
+      customScrollX = 0.6666;
+    } else {
+      customScrollX = 0.6666 + ((scroll - 0.75) / 0.25) * 0.3334;
+    }
+
+    const baseCameraX = customScrollX * MAX_SCENE_WIDTH;
 
     const parallaxX = THREE.MathUtils.clamp(smoothedMouse.current.x * 1.5, -2, 2);
     const parallaxY = THREE.MathUtils.clamp(smoothedMouse.current.y * 0.8, -1, 1);
