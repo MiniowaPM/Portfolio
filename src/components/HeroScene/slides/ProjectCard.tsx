@@ -1,7 +1,10 @@
 import { type ProjectItem, type ProjectStatus, type TechColor } from '../../../data/projectData';
+import ProjectMedia from './ProjectMedia';
 
 interface ProjectCardProps extends ProjectItem {
   variant: 'featured' | 'grid';
+  images?: string[];
+  deviceType?: 'mobile' | 'desktop' | 'none';
 }
 
 const getTechColorClasses = (color: TechColor) => {
@@ -36,6 +39,8 @@ export function ProjectCard({
   team,
   links,
   imagePlaceholder,
+  images,
+  deviceType,
 }: ProjectCardProps) {
   const techClasses = getTechColorClasses(techColor);
 
@@ -60,10 +65,62 @@ export function ProjectCard({
 
   // WARIANT 1: Wielka karta (Featured)
   if (variant === 'featured') {
+    const mediaImages = images?.length
+      ? images
+      : imagePlaceholder && imagePlaceholder.includes('/')
+        ? [imagePlaceholder]
+        : [];
+
+    // --- 1A. UKŁAD DLA APLIKACJI MOBILNYCH (Zdjęcie obok tekstu na PC) ---
+    if (deviceType === 'mobile') {
+      return (
+        <div className="bg-base-200/60 border-base-content/10 hover:bg-base-200/80 flex flex-col items-center gap-8 rounded-3xl border p-6 backdrop-blur-sm transition-colors lg:flex-row lg:p-8">
+          <div className="flex w-full shrink-0 justify-center lg:w-5/12">
+            <ProjectMedia title={title} images={mediaImages} deviceType={deviceType} />
+          </div>
+
+          <div className="flex w-full flex-col lg:w-7/12">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <h3 className="text-base-content text-3xl font-bold">{title}</h3>
+              {badgesContent}
+            </div>
+
+            <p className="text-base-content/70 mb-6 text-lg leading-relaxed">{description}</p>
+
+            <div className="mb-8 flex flex-wrap gap-2">
+              {techStack.map((tech) => (
+                <span
+                  key={tech}
+                  className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${techClasses}`}
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+            {links && (
+              <div className="mt-auto flex flex-wrap gap-4">
+                {links.map((link, i) => (
+                  <a
+                    key={i}
+                    href={link.url}
+                    className={`btn rounded-full px-8 ${link.primary ? 'btn-primary' : 'btn-outline'}`}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // --- 1B. UKŁAD DLA APLIKACJI DESKTOP/WEB (Zdjęcie nad tekstem - tak jak było) ---
     return (
       <div className="bg-base-200/60 border-base-content/10 hover:bg-base-200/80 flex flex-col rounded-3xl border p-6 backdrop-blur-sm transition-colors">
-        <div className="bg-base-300 mb-6 flex h-48 w-full items-center justify-center overflow-hidden rounded-2xl">
-          <span className="text-base-content/40 font-medium">{imagePlaceholder}</span>
+        <div className="mb-6 flex w-full justify-center">
+          <ProjectMedia title={title} images={mediaImages} deviceType={deviceType} />
         </div>
 
         <div className="mb-3 flex items-center justify-between gap-3">

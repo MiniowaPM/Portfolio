@@ -19,6 +19,8 @@ export interface ProjectItem {
   team?: ProjectTeam;
   links?: ProjectLink[];
   imagePlaceholder?: string;
+  images?: string[];
+  deviceType?: 'mobile' | 'desktop' | 'none';
 }
 
 export const FEATURED_PROJECTS: ProjectItem[] = [
@@ -31,6 +33,20 @@ export const FEATURED_PROJECTS: ProjectItem[] = [
     status: 'Live',
     team: 'Team',
     imagePlaceholder: 'PlanPM App',
+    images: [
+      '/images/PlanPM/8.jpg',
+      '/images/PlanPM/9.jpg',
+      '/images/PlanPM/10.jpg',
+      '/images/PlanPM/11.jpg',
+      '/images/PlanPM/1.jpg',
+      '/images/PlanPM/2.jpg',
+      '/images/PlanPM/3.jpg',
+      '/images/PlanPM/4.jpg',
+      '/images/PlanPM/5.jpg',
+      '/images/PlanPM/6.jpg',
+      '/images/PlanPM/7.jpg',
+    ],
+    deviceType: 'mobile',
     links: [
       {
         label: 'Google Play',
@@ -50,8 +66,37 @@ export const FEATURED_PROJECTS: ProjectItem[] = [
     status: 'In Progress',
     team: 'Team',
     imagePlaceholder: 'NavigatorPM App',
+    images: ['/images/NavigatorPM/1.png', '/images/NavigatorPM/2.png'],
+    deviceType: 'desktop',
     links: [
       { label: 'GitHub', url: 'https://github.com/KNI-PM-Szczecin/NavigatorPM', primary: true },
+    ],
+  },
+  {
+    title: 'World of Drones - GlobalLogic Internship',
+    description:
+      'An end-to-end IoT system built during the GlobalLogic summer internship, focused on autonomous drone operations and real-time computer vision. I developed a Nano-architecture AI model for detecting cars and license plates from the air, integrated it with a React frontend and FastAPI backend. Additionally, I handled the hardware layer by designing 3D-printable enclosures for Edge AI devices (Raspberry Pi, STM32) and solving complex connectivity issues. Delivered in a strict Agile/Scrum environment with full CI/CD pipelines.',
+    techStack: [
+      'React',
+      'FastAPI',
+      'Computer Vision / AI',
+      'IoT (Raspberry Pi)',
+      'Autodesk Fusion',
+      'Jenkins / CI-CD',
+    ],
+    techColor: 'emerald',
+    status: 'Completed',
+    team: 'Team',
+    imagePlaceholder: 'World of Drones App',
+    images: ['/images/WorldOfDrones/2.jpg', '/images/WorldOfDrones/3.jpg'],
+
+    deviceType: 'none',
+    links: [
+      {
+        label: 'Global Logic Site',
+        url: 'https://www.globallogic.com/pl/about/events/iot-project-based-learning-world-of-drones/',
+        primary: true,
+      },
     ],
   },
   {
@@ -63,6 +108,8 @@ export const FEATURED_PROJECTS: ProjectItem[] = [
     status: 'Completed',
     team: 'Team',
     imagePlaceholder: 'ALEKSY Hardware / Demo Image',
+    images: ['/images/ALEKSY/1.webp', '/images/ALEKSY/2.webp', '/images/ALEKSY/3.webp'],
+    deviceType: 'none',
     links: [
       { label: 'Watch Demo', url: 'https://www.youtube.com/shorts/V51wDqSVl7A', primary: true },
       { label: 'GitHub', url: 'https://github.com/MiniowaPM/voice-assistant' },
@@ -77,6 +124,7 @@ export const FEATURED_PROJECTS: ProjectItem[] = [
     status: 'In Progress',
     team: 'Solo',
     imagePlaceholder: 'Ocean Rendering Screenshot',
+    deviceType: 'none',
     links: [
       {
         label: 'Source Code',
