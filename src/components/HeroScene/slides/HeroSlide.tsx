@@ -13,7 +13,7 @@ const heroVariants: Variants = {
   }),
 };
 
-export function HeroSlide() {
+function HeroSlide() {
   return (
     <section className="slide-panel absolute top-0 left-0 flex h-screen w-screen flex-col justify-center px-8 md:pr-[40vw] md:pl-20">
       <motion.h1
@@ -38,3 +38,5 @@ export function HeroSlide() {
     </section>
   );
 }
+
+export default HeroSlide;

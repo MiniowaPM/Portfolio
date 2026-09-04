@@ -5,7 +5,7 @@ interface ContactSlideProps {
   setToast: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function ContactSlide({ topOffset, setToast }: ContactSlideProps) {
+function ContactSlide({ topOffset, setToast }: ContactSlideProps) {
   const handleDiscordCopy = () => {
     navigator.clipboard.writeText('miniowa123');
     setToast(true);
@@ -17,9 +17,7 @@ export function ContactSlide({ topOffset, setToast }: ContactSlideProps) {
       className="slide-panel pointer-events-auto absolute left-[300vw] flex h-screen w-screen flex-col justify-center px-8 md:pr-12 md:pl-[50vw] lg:pr-24"
       style={{ top: topOffset }}
     >
-      {/* Dodano: items-end (przyciąga do prawej) i text-right (wyrównuje tekst) */}
       <div className="ml-auto flex max-w-xl flex-col items-end gap-8 text-right">
-        {/* Nagłówek i krótka zachęta */}
         <div>
           <h2 className="text-base-content mb-4 text-5xl font-bold">Let's Connect</h2>
           <p className="text-base-content/80 text-lg leading-relaxed">
@@ -52,8 +50,8 @@ export function ContactSlide({ topOffset, setToast }: ContactSlideProps) {
           </a>
 
           <a
-            href="/Twoje_CV.pdf"
-            download="Twoje_CV.pdf"
+            href="content/Resume.pdf"
+            download="Mikolaj_Molodecki_CV.pdf"
             className="btn btn-outline btn-lg transition-transform hover:scale-105"
           >
             <svg
@@ -119,3 +117,5 @@ export function ContactSlide({ topOffset, setToast }: ContactSlideProps) {
     </section>
   );
 }
+
+export default ContactSlide;

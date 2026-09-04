@@ -1,4 +1,3 @@
-// src/components/slides/ProjectSlide.tsx
 import { motion, type Variants } from 'framer-motion'; // DODANY IMPORT
 import { forwardRef } from 'react';
 import { GitHubCalendar } from 'react-github-calendar';
@@ -31,7 +30,7 @@ const cardVariants: Variants = {
   },
 };
 
-export const ProjectSlide = forwardRef<HTMLElement>((_, ref) => {
+const ProjectSlide = forwardRef<HTMLElement>((_, ref) => {
   return (
     <section
       ref={ref}
@@ -119,4 +118,4 @@ export const ProjectSlide = forwardRef<HTMLElement>((_, ref) => {
   );
 });
 
-ProjectSlide.displayName = 'ProjectSlide';
+export default ProjectSlide;

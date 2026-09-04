@@ -14,9 +14,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouteTheme } from '../../hooks/useRouteTheme';
 import { AvatarScene } from './Scene';
 import AboutSlide from './slides/AboutSlide';
-import { ContactSlide } from './slides/ContactSlide';
-import { HeroSlide } from './slides/HeroSlide';
-import { ProjectSlide } from './slides/ProjectSlide';
+import ContactSlide from './slides/ContactSlide';
+import HeroSlide from './slides/HeroSlide';
+import ProjectSlide from './slides/ProjectSlide';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -211,6 +211,7 @@ export function Hero() {
           <AboutSlide />
           <ProjectSlide ref={projectsRef} />
           <ContactSlide topOffset={projectsScrollDist} setToast={setShowDiscordToast} />
+          {/* <ContactSlide /> */}
         </div>
       </div>
 
