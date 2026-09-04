@@ -15,6 +15,7 @@ import { useRouteTheme } from '../../hooks/useRouteTheme';
 import { AvatarScene } from './Scene';
 import AboutSlide from './slides/AboutSlide';
 import { ContactSlide } from './slides/ContactSlide';
+import { HeroSlide } from './slides/HeroSlide';
 import { ProjectSlide } from './slides/ProjectSlide';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -206,13 +207,7 @@ export function Hero() {
           ref={trackRef}
           className="pointer-events-none absolute top-0 left-0 h-screen w-screen will-change-transform"
         >
-          <section className="slide-panel absolute top-0 left-0 flex h-screen w-screen flex-col justify-center px-8 md:pr-[40vw] md:pl-20">
-            <h1 className="mb-4 text-6xl font-bold">Hi, I'm Mikołaj</h1>
-            <span className="text-2md font-semibold">
-              Software Engineer | Full Stack Developer | 3D Enthusiast
-            </span>
-          </section>
-
+          <HeroSlide />
           <AboutSlide />
           <ProjectSlide ref={projectsRef} />
           <ContactSlide topOffset={projectsScrollDist} setToast={setShowDiscordToast} />

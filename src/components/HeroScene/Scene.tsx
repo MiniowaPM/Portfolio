@@ -13,6 +13,8 @@ const MAX_SCENE_WIDTH = 50;
 const BASE_SCALE = 1.5;
 const MIN_WALK_SPEED = 3;
 const MAX_WALK_SPEED = 4;
+const WALK_DELAY = 0.005;
+const WALKING_THRESHOLD = 0.05;
 
 const slideCheckpoints = [
   { anim: 'Waving' as ActionName },
@@ -28,9 +30,12 @@ export function AvatarScene({ scrollRef }: AvatarSceneProps) {
   const smoothedMouse = useRef(new THREE.Vector2(0, 0));
   const lookAtTarget = useRef(new THREE.Vector3(0, 0, 0));
   const smoothedCamBaseX = useRef(0);
+  const walkDelayTimer = useRef(0);
 
   useFrame((state, delta) => {
     if (!avatarGroup.current || scrollRef.current === null) return;
+
+    smoothedMouse.current.lerp(state.pointer, delta * 4);
 
     const scroll = scrollRef.current;
 
@@ -58,8 +63,19 @@ export function AvatarScene({ scrollRef }: AvatarSceneProps) {
     const currentSlide = Math.round(scroll * (totalSlides - 1));
     const targetAnim = slideCheckpoints[currentSlide].anim;
 
-    const isWalking = distance > 0.05;
+    let isWalking = false;
     const activeAnimState = isWalking ? 'Walking' : targetAnim;
+
+    if (distance > WALKING_THRESHOLD) {
+      walkDelayTimer.current += delta;
+
+      if (walkDelayTimer.current > WALK_DELAY) {
+        isWalking = true;
+      }
+    } else {
+      walkDelayTimer.current = 0;
+      isWalking = false;
+    }
 
     if (isWalking) {
       if (currentAnim !== 'Walking') setCurrentAnim('Walking');

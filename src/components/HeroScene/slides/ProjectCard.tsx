@@ -1,4 +1,3 @@
-import React from 'react';
 import { type ProjectItem, type ProjectStatus, type TechColor } from '../../../data/projectData';
 
 interface ProjectCardProps extends ProjectItem {
@@ -27,7 +26,7 @@ const getStatusColor = (status: ProjectStatus) => {
   }
 };
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({
+export function ProjectCard({
   variant,
   title,
   description,
@@ -37,7 +36,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   team,
   links,
   imagePlaceholder,
-}) => {
+}: ProjectCardProps) {
   const techClasses = getTechColorClasses(techColor);
 
   const badgesContent = (
@@ -124,4 +123,4 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
       </div>
     </div>
   );
-};
+}

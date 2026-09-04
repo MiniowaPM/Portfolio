@@ -1,18 +1,59 @@
+import { motion, type Variants } from 'framer-motion';
+
+const textVariants: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut', delay: 0.1 },
+  },
+};
+
+const techVariants: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut', delay: 0.25 },
+  },
+};
+
+const hobbiesVariants: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: 'easeOut', delay: 0.4 },
+  },
+};
+
 function AboutSlide() {
   return (
     <section className="slide-panel pointer-events-auto absolute top-0 left-[100vw] flex h-screen w-screen flex-col justify-center px-8 md:pr-[45vw] md:pl-20">
       <div className="flex max-w-2xl flex-col gap-6">
-        <div>
+        {/* 1. Nagłówek i tekst */}
+        <motion.div
+          variants={textVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <h2 className="text-base-content mb-4 text-5xl font-bold">About Me</h2>
           <p className="text-base-content/80 text-lg leading-relaxed">
             I am passionate about creating applications, continuous learning, and solving complex
             problems with code. My path combines solid engineering with creativity – from web and
             mobile development to game engines and VFX.
           </p>
-        </div>
+        </motion.div>
 
-        {/* 3. Tech Stack (Subtelne, hardcodowane kolory) */}
-        <div className="flex flex-wrap gap-2">
+        {/* 2. Tech Stack */}
+        <motion.div
+          className="flex flex-wrap gap-2"
+          variants={techVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           {/* Game Dev & Languages - Zgaszony Niebieski */}
           {[
             'HTML',
@@ -62,10 +103,16 @@ function AboutSlide() {
               {tech}
             </span>
           ))}
-        </div>
+        </motion.div>
 
-        {/* 4. Hobbies (Karty z tytułami w base-content) */}
-        <div className="mt-2 grid grid-cols-1 gap-4 md:grid-cols-2">
+        {/* 3. Hobbies */}
+        <motion.div
+          className="mt-2 grid grid-cols-1 gap-4 md:grid-cols-2"
+          variants={hobbiesVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           {/* Sports */}
           <div className="bg-base-200/60 border-base-content/10 rounded-box hover:bg-base-200/80 border p-5 backdrop-blur-sm transition-colors">
             <h4 className="text-base-content text-md mb-2 font-bold">🏐 Sports & Outdoors</h4>
@@ -82,7 +129,7 @@ function AboutSlide() {
               them as a tool for developing strategic thinking and problem-solving skills.
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
