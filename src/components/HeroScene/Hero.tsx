@@ -1,9 +1,16 @@
-import { ContactShadows, Sparkles } from '@react-three/drei';
+import { Sparkles } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
+import {
+  Bloom,
+  BrightnessContrast,
+  EffectComposer,
+  Noise,
+  Vignette,
+} from '@react-three/postprocessing';
 import Lenis from '@studio-freight/lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouteTheme } from '../../hooks/useRouteTheme';
 import { AvatarScene } from './Scene';
 import AboutSlide from './slides/AboutSlide';
@@ -12,7 +19,7 @@ import { ProjectSlide } from './slides/ProjectSlide';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const Hero: React.FC = () => {
+export function Hero() {
   useRouteTheme('retro', 'abyss');
   const mainRef = useRef<HTMLElement>(null!);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -152,9 +159,9 @@ export const Hero: React.FC = () => {
 
     const p1 = 1 / totalDuration;
     const p2 = 2 / totalDuration;
-    const p3 = (2 + verticalRatio) / totalDuration;
+    // const p3 = (2 + verticalRatio) / totalDuration; // End of vertical scroll section
 
-    const progressMap = [0, p1, p2, p3];
+    const progressMap = [0, p1, p2, 1];
     const progress = progressMap[index];
 
     const targetY = st.start + (st.end - st.start) * progress;
@@ -175,7 +182,6 @@ export const Hero: React.FC = () => {
         <Canvas eventSource={mainRef} camera={{ position: [0, 0, 5], fov: 45 }}>
           <directionalLight position={[2, 3, 4]} intensity={1.5} color="#fff0e0" />
           <ambientLight intensity={1.5} color="#ffd4b8" />
-          <ContactShadows position={[0, -2, 0]} opacity={0.6} scale={10} blur={2} far={4} />
           <Sparkles
             count={400}
             scale={[60, 20, 10]}
@@ -186,6 +192,12 @@ export const Hero: React.FC = () => {
             color="#ffd4b8"
           />
           <AvatarScene scrollRef={scrollProgress} />
+          <EffectComposer>
+            <Bloom luminanceThreshold={1.2} mipmapBlur intensity={1.5} />
+            <Vignette eskil={false} offset={0.1} darkness={0.9} />
+            <Noise opacity={0.03} />
+            <BrightnessContrast brightness={0.02} contrast={0.1} />
+          </EffectComposer>
         </Canvas>
       </div>
 
@@ -244,6 +256,6 @@ export const Hero: React.FC = () => {
       </div>
     </main>
   );
-};
+}
 
 export default Hero;

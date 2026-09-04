@@ -62,6 +62,17 @@ export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
   const { nodes, materials } = useGraph(clone) as unknown as GLTFResult;
   const { actions } = useAnimations(animations, group);
   const initialHeadRot = useRef<THREE.Euler | null>(null);
+  const globalMouse = useRef(new THREE.Vector2(0, 0));
+
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      globalMouse.current.x = (event.clientX / window.innerWidth) * 2 - 1;
+      globalMouse.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   useEffect(() => {
     animations.forEach((clip) => {
@@ -94,7 +105,7 @@ export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
     }
   }, [animation, actions]);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     const walkingAction = actions['Walking'];
     if (animation === 'Walking' && walkingAction && walkSpeedRef) {
       walkingAction.setEffectiveTimeScale(walkSpeedRef.current);
@@ -111,8 +122,23 @@ export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
       }
 
       if (animation === 'Idle' || animation === 'Waving') {
-        const targetPitch = initialHeadRot.current.x + -state.pointer.y * 0.4;
-        const targetYaw = initialHeadRot.current.y + state.pointer.x * 0.6;
+        let targetPitch = initialHeadRot.current.x + -globalMouse.current.y * 0.4;
+        let targetYaw = initialHeadRot.current.y + globalMouse.current.x * 0.6;
+
+        const maxPitch = 0.5;
+        const maxYaw = 0.6;
+
+        targetPitch = THREE.MathUtils.clamp(
+          targetPitch,
+          initialHeadRot.current.x - maxPitch,
+          initialHeadRot.current.x + maxPitch
+        );
+
+        targetYaw = THREE.MathUtils.clamp(
+          targetYaw,
+          initialHeadRot.current.y - maxYaw,
+          initialHeadRot.current.y + maxYaw
+        );
 
         head.rotation.x = THREE.MathUtils.lerp(head.rotation.x, targetPitch, delta * 6);
         head.rotation.y = THREE.MathUtils.lerp(head.rotation.y, targetYaw, delta * 6);
