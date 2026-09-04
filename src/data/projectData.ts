@@ -23,17 +23,49 @@ export interface ProjectItem {
 
 export const FEATURED_PROJECTS: ProjectItem[] = [
   {
-    title: 'ALEKSY – Edge Voice Assistant',
+    title: 'PlanPM - Mobile Application',
+    description:
+      'A comprehensive mobile application serving a live user base of students and faculty. Managed the full SDLC, implemented robust error handling for 99%+ uptime, and configured CI/CD pipelines with Supabase backend integration.',
+    techStack: ['Flutter', 'Dart', 'Supabase', 'Scraping', 'CI/CD'],
+    techColor: 'emerald',
+    status: 'Live',
+    team: 'Team',
+    imagePlaceholder: 'PlanPM App',
+    links: [
+      {
+        label: 'Google Play',
+        url: 'https://play.google.com/store/apps/details?id=com.piotrwittig.plan_pm&hl=pl',
+        primary: true,
+      },
+      { label: 'App Store', url: 'https://apps.apple.com/pl/app/plan-pm/id6759010559' },
+      { label: 'GitHub', url: 'https://github.com/KNI-PM-Szczecin/plan_pm' },
+    ],
+  },
+  {
+    title: 'NavigatorPM - Campus Wayfinding System',
+    description:
+      'An indoor navigation platform designed to streamline traversing university campuses, functioning as a transit app for complex building layouts. The system features a robust algorithmic routing engine for calculating optimal paths between classrooms, coupled with a comprehensive admin dashboard that allows dynamic map creation, node editing, and layout management without requiring code changes.',
+    techStack: ['React', 'TypeScript', 'Graph Algorithms', 'Node.js', 'RCP'],
+    techColor: 'emerald',
+    status: 'In Progress',
+    team: 'Team',
+    imagePlaceholder: 'NavigatorPM App',
+    links: [
+      { label: 'GitHub', url: 'https://github.com/KNI-PM-Szczecin/NavigatorPM', primary: true },
+    ],
+  },
+  {
+    title: 'ALEKSY - Edge Voice Assistant',
     description:
       'A privacy-first, fully offline Polish voice assistant running on an NVIDIA Jetson Xavier NX. Architected the entire pipeline—from wake-word detection to Whisper STT and local LLM inference (Bielik 7B)—processing entirely on-device without cloud APIs.',
     techStack: ['Python', 'LLMs', 'Whisper', 'Edge AI', 'Linux'],
     techColor: 'violet',
     status: 'Completed',
-    team: 'Solo',
+    team: 'Team',
     imagePlaceholder: 'ALEKSY Hardware / Demo Image',
     links: [
-      { label: 'Watch Demo', url: '#', primary: true },
-      { label: 'GitHub', url: '#' },
+      { label: 'Watch Demo', url: 'https://www.youtube.com/shorts/V51wDqSVl7A', primary: true },
+      { label: 'GitHub', url: 'https://github.com/MiniowaPM/voice-assistant' },
     ],
   },
   {
@@ -42,45 +74,31 @@ export const FEATURED_PROJECTS: ProjectItem[] = [
       'Engineering thesis project focusing on high-fidelity maritime simulation. Engineered dynamic ocean surface generation, real-time physics (Gerstner waves), and advanced HLSL shaders for realistic water rendering in Unity.',
     techStack: ['Unity', 'C#', 'HLSL', 'Physics'],
     techColor: 'blue',
-    status: 'Completed',
+    status: 'In Progress',
     team: 'Solo',
     imagePlaceholder: 'Ocean Rendering Screenshot',
-    links: [{ label: 'Source Code', url: '#', primary: true }],
-  },
-  {
-    title: 'PlanPM – Mobile Application',
-    description:
-      'A comprehensive mobile application serving a live user base of students and faculty. Managed the full SDLC, implemented robust error handling for 99%+ uptime, and configured CI/CD pipelines with Supabase backend integration.',
-    techStack: ['Flutter', 'Dart', 'Supabase', 'CI/CD'],
-    techColor: 'emerald',
-    status: 'Live',
-    team: 'Team',
-    imagePlaceholder: 'PlanPM App Mockup',
     links: [
-      { label: 'Google Play', url: '#', primary: true },
-      { label: 'App Store', url: '#' },
+      {
+        label: 'Source Code',
+        url: 'https://github.com/MiniowaPM/SimulatingOceanWater',
+        primary: true,
+      },
     ],
   },
 ];
 
 export const GRID_PROJECTS: ProjectItem[] = [
   {
-    title: 'NavigatorPM',
-    description:
-      'A web application serving as an indoor navigation system for the university building (similar to "jakdojade"). Focused on complex routing algorithms and responsive UI.',
-    techStack: ['React', 'Next.js', 'RCP'],
-    techColor: 'emerald',
-    status: 'In Progress',
-    team: 'Team',
-  },
-  {
     title: 'Maritime Autonomous Simulator',
     description:
       'Simulation system for testing autonomous navigation algorithms. Designed dynamic sea conditions and vessel hydrodynamic interaction for low-latency state feedback.',
     techStack: ['C#', 'Unity', 'HLSL'],
     techColor: 'blue',
-    status: 'Completed',
+    status: 'In Progress',
     team: 'Team',
+    links: [
+      { label: 'GitHub', url: 'https://github.com/JakubLopyta/ship-simulator', primary: true },
+    ],
   },
   {
     title: 'ŁatwaUstawa (Hackathon)',
@@ -90,6 +108,7 @@ export const GRID_PROJECTS: ProjectItem[] = [
     techColor: 'violet',
     status: 'Completed',
     team: 'Team',
+    links: [{ label: 'GitHub', url: 'https://github.com/Schoji/LatwaUstawa', primary: true }],
   },
   {
     title: 'E.D.E.K. ChatBot',
@@ -99,6 +118,9 @@ export const GRID_PROJECTS: ProjectItem[] = [
     techColor: 'violet',
     status: 'Completed',
     team: 'Solo',
+    links: [
+      { label: 'GitHub', url: 'https://github.com/MiniowaPM/ChatBotMiniowaPM', primary: true },
+    ],
   },
   {
     title: 'Reptilia (betterspotify)',
@@ -107,16 +129,24 @@ export const GRID_PROJECTS: ProjectItem[] = [
     techStack: ['Vue.js', 'Electron', 'FastAPI'],
     techColor: 'emerald',
     status: 'Completed',
-    team: 'Solo',
+    team: 'Team',
+    links: [{ label: 'GitHub', url: 'https://github.com/MiniowaPM/Reptilia', primary: true }],
   },
   {
     title: 'YouTube-but-worst',
     description:
-      'A full-stack video streaming platform clone exploring multimedia serving, data pagination, and enterprise-tier service layering.',
+      'A full-stack video streaming platform clone exploring multimedia serving, data pagination, and enterprise-tier service layering. Created for educational purposes.',
     techStack: ['React', 'Java', 'Spring Boot'],
     techColor: 'emerald',
-    status: 'Completed',
+    status: 'In Progress',
     team: 'Solo',
+    links: [
+      {
+        label: 'GitHub',
+        url: 'https://github.com/MiniowaPM/MiniowaPM-youtube-but-worse-frontend',
+        primary: true,
+      },
+    ],
   },
   {
     title: 'CryptoApp',
@@ -126,23 +156,29 @@ export const GRID_PROJECTS: ProjectItem[] = [
     techColor: 'violet',
     status: 'Completed',
     team: 'Solo',
+    links: [
+      { label: 'GitHub', url: 'https://github.com/MiniowaPM/CryptoApp', primary: true },
+      { label: 'Live Demo', url: 'https://cryptoapp-miniowa.streamlit.app/', primary: false },
+    ],
   },
   {
     title: 'MatrixCalc',
     description:
-      'Native desktop matrix calculator designed for rapid linear algebra computations, featuring high-performance memory management.',
+      'Native desktop matrix calculator designed for rapid linear algebra computations, featuring high-performance memory management. Prototype for class projects and research in numerical methods.',
     techStack: ['C++', 'wxWidgets', 'Math'],
     techColor: 'blue',
     status: 'Completed',
     team: 'Solo',
+    links: [{ label: 'GitHub', url: 'https://github.com/MiniowaPM/MatrixCalc', primary: true }],
   },
   {
     title: 'Ticket Procurement Bot',
     description:
-      'Automated script designed to monitor event queues, scrape availability in real-time, and automate checkout workflows on ticketing platforms.',
+      'Automated script designed to monitor event queues, scrape availability in real-time, and automate checkout workflows on ticketing platform eBilety.pl.',
     techStack: ['Python', 'Automation', 'Scraping'],
     techColor: 'violet',
     status: 'Completed',
     team: 'Solo',
+    links: [{ label: 'GitHub', url: 'https://github.com/MiniowaPM/TicketMaster', primary: true }],
   },
 ];
