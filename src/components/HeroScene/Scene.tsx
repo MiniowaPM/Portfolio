@@ -36,20 +36,21 @@ export function AvatarScene({ scrollRef }: AvatarSceneProps) {
 
     let customScrollX: number;
 
-    let avatarOffset = 2.5;
+    let currentAvatarOffset = 2.5;
 
     if (scroll < 0.5) {
       customScrollX = (scroll / 0.5) * 0.6666;
     } else if (scroll >= 0.5 && scroll < 0.75) {
       customScrollX = 0.6666;
     } else {
-      customScrollX = 0.6666 + ((scroll - 0.75) / 0.25) * 0.3334;
-      avatarOffset = -5.0;
+      const sectionProgress = (scroll - 0.75) / 0.25;
+      customScrollX = 0.6666 + sectionProgress * 0.3334;
+      currentAvatarOffset = THREE.MathUtils.lerp(2.5, -5.0, sectionProgress);
     }
 
     const baseCameraX = customScrollX * MAX_SCENE_WIDTH;
 
-    const avatarTargetX = baseCameraX + avatarOffset;
+    const avatarTargetX = baseCameraX + currentAvatarOffset;
     const avatar = avatarGroup.current;
     const distance = Math.abs(avatar.position.x - avatarTargetX);
 
