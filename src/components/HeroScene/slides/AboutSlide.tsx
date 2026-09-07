@@ -40,9 +40,10 @@ function AboutSlide() {
         >
           <h2 className="text-base-content mb-4 text-5xl font-bold">About Me</h2>
           <p className="text-base-content/80 text-lg leading-relaxed">
-            I am passionate about creating applications, continuous learning, and solving complex
-            problems with code. My path combines solid engineering with creativity – from web and
-            mobile development to game engines and VFX.
+            Currently in my 4th year of Computer Science at the Maritime University, majoring in
+            Multimedia Systems. I thrive at the intersection of logic and creativity—whether that
+            means building robust mobile apps, architecting IoT systems, or programming game engines
+            and shaders. Always learning, always building.
           </p>
         </motion.div>
 

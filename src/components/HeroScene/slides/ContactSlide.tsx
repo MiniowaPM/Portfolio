@@ -21,8 +21,9 @@ function ContactSlide({ topOffset, setToast }: ContactSlideProps) {
         <div>
           <h2 className="text-base-content mb-4 text-5xl font-bold">Let's Connect</h2>
           <p className="text-base-content/80 text-lg leading-relaxed">
-            I'm currently open to new opportunities. Whether you have a question, a project in mind,
-            or just want to say hi, I'll try my best to get back to you!
+            I'm currently actively seeking a Junior Software Developer position. Whether you have a
+            job opportunity, a project in mind, or just want to say hi, my inbox is always open and
+            I'll try my best to get back to you!
           </p>
         </div>
 
