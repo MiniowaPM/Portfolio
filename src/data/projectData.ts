@@ -88,7 +88,14 @@ export const FEATURED_PROJECTS: ProjectItem[] = [
     status: 'Completed',
     team: 'Team',
     imagePlaceholder: 'World of Drones App',
-    images: ['/images/WorldOfDrones/2.jpg', '/images/WorldOfDrones/3.jpg'],
+    images: [
+      '/images/WorldOfDrones/1.jpg',
+      '/images/WorldOfDrones/2.jpg',
+      '/images/WorldOfDrones/3.jpg',
+      '/images/WorldOfDrones/4.jpg',
+      '/images/WorldOfDrones/5.jpg',
+      '/images/WorldOfDrones/6.jpg',
+    ],
 
     deviceType: 'none',
     links: [

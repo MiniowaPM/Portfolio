@@ -1,22 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { PHOTO_DATA } from '../../data/photoData';
 import { polaroidStore } from '../../store/polaroidStore';
-
-const PHOTO_DATA: Record<number, Array<{ src: string; caption: string }>> = {
-  0: [
-    { src: '/images/home-1.jpg', caption: 'Hello!' },
-    { src: '/images/home-2.jpg', caption: 'Welcome to my world' },
-  ],
-  1: [
-    { src: '/images/about-1.jpg', caption: 'AZS Maritime University' },
-    { src: '/images/about-2.jpg', caption: 'Polish Academic Championships' },
-  ],
-  2: [
-    { src: '/images/projects-1.jpg', caption: 'Cooking code...' },
-    { src: '/images/projects-2.jpg', caption: 'Late night debugging' },
-  ],
-  3: [{ src: '/images/contact-1.jpg', caption: "Let's talk!" }],
-};
 
 export function PolaroidOverlay({ activeSlide }: { activeSlide: number }) {
   const [data, setData] = useState(polaroidStore.get());
