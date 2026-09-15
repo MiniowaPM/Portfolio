@@ -94,6 +94,17 @@ export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
   }, [actions, materials]);
 
   useEffect(() => {
+    // Rozwiązanie problemu ze znikającym modelem przy animacjach!
+    // Bounding Box modelu liczy się dla T-pose. Przy niektórych animacjach (np. Waving) 
+    // kamera może nie widzieć oryginalnego Bounding Boxa i silnik przestaje renderować siatkę.
+    Object.values(nodes).forEach((node) => {
+      if ((node as THREE.SkinnedMesh).isSkinnedMesh) {
+        node.frustumCulled = false;
+      }
+    });
+  }, [nodes]);
+
+  useEffect(() => {
     const currentAction = actions[animation];
 
     if (currentAction) {

@@ -156,11 +156,11 @@ export function AvatarScene({ scrollRef, activeSlide }: AvatarSceneProps) {
 
         case 'Idle': // Sekcja Contact (3)
         default:
-          camOffsetX = -2.5; // Kamera po lewej stronie (razem z awatarem)
-          camOffsetY = 1.2; // PODNIESIENIE kamery wyżej, żeby zmieścić głowę!
-          camOffsetZ = 3.8; // Większy dystans, żeby pokazać więcej postaci
-          lookOffsetX = -2.5; // Patrzymy prosto na niego
-          lookOffsetY = 0.6; // Podnosimy wzrok z nóg na wysokość klatki piersiowej/twarzy
+          camOffsetX = -2.5;
+          camOffsetY = 1.2;
+          camOffsetZ = 3.8;
+          lookOffsetX = -2.5;
+          lookOffsetY = 0.6;
           break;
       }
       transitionSpeed = 1.0;
@@ -225,7 +225,7 @@ export function AvatarScene({ scrollRef, activeSlide }: AvatarSceneProps) {
 
   return (
     <group ref={avatarGroup} scale={BASE_SCALE} position={[2.5, -2, -1.5]}>
-      <AvatarEasterEgg activeSlide={activeSlide}>
+      <AvatarEasterEgg activeSlide={activeSlide} currentAnim={currentAnim}>
         <Avatar animation={currentAnim} walkSpeedRef={walkSpeedRef} />
       </AvatarEasterEgg>
     </group>

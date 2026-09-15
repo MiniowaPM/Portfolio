@@ -23,12 +23,15 @@ const PHOTO_DATA: Record<number, Array<{ src: string; caption: string }>> = {
 interface AvatarEasterEggProps {
   activeSlide: number;
   children: React.ReactNode;
+  currentAnim: string;
 }
 
-export function AvatarEasterEgg({ activeSlide, children }: AvatarEasterEggProps) {
+export function AvatarEasterEgg({ activeSlide, children, currentAnim }: AvatarEasterEggProps) {
   const [isPhotoVisible, setIsPhotoVisible] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [photoIndex, setPhotoIndex] = useState(0);
+
+  const effectiveIsPhotoVisible = isPhotoVisible && currentAnim !== 'Walking';
 
   const avatarGroupRef = useRef<THREE.Group>(null!);
 
@@ -40,7 +43,7 @@ export function AvatarEasterEgg({ activeSlide, children }: AvatarEasterEggProps)
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-    if (isPhotoVisible && currentGallery.length > 1) {
+    if (effectiveIsPhotoVisible && currentGallery.length > 1) {
       interval = setInterval(() => {
         setPhotoIndex((prevIndex) => (prevIndex + 1) % currentGallery.length);
       }, 3500);
@@ -48,22 +51,22 @@ export function AvatarEasterEgg({ activeSlide, children }: AvatarEasterEggProps)
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isPhotoVisible, currentGallery.length]);
+  }, [effectiveIsPhotoVisible, currentGallery.length]);
 
   // Synchronizacja z naszym zewnętrznym store
   useEffect(() => {
-    polaroidStore.set({ visible: isPhotoVisible, photoIndex });
-  }, [isPhotoVisible, photoIndex]);
+    polaroidStore.set({ visible: effectiveIsPhotoVisible, photoIndex });
+  }, [effectiveIsPhotoVisible, photoIndex]);
 
   useFrame((_, delta) => {
     if (avatarGroupRef.current) {
-      const targetScale = isPhotoVisible ? 0.001 : 1;
+      const targetScale = effectiveIsPhotoVisible ? 0.001 : 1;
       avatarGroupRef.current.scale.setScalar(
         THREE.MathUtils.damp(avatarGroupRef.current.scale.x, targetScale, 6, delta)
       );
 
-      if (isPhotoVisible) {
-        // Obliczamy współrzędne ekranu 2D (nie używamy <Html>, bo GSAP/R3F psuje scroll)
+      if (effectiveIsPhotoVisible) {
+        // Obliczamy współrzędne ekranu 2D
         const vector = new THREE.Vector3();
         avatarGroupRef.current.getWorldPosition(vector);
         vector.y += 2.2; // Offset Y dla polaroidu
@@ -79,7 +82,7 @@ export function AvatarEasterEgg({ activeSlide, children }: AvatarEasterEggProps)
   });
 
   useEffect(() => {
-    if (hovered && !isPhotoVisible) {
+    if (hovered && !effectiveIsPhotoVisible) {
       document.body.style.cursor = 'pointer';
     } else {
       document.body.style.cursor = 'auto';
@@ -87,7 +90,7 @@ export function AvatarEasterEgg({ activeSlide, children }: AvatarEasterEggProps)
     return () => {
       document.body.style.cursor = 'auto';
     };
-  }, [hovered, isPhotoVisible]);
+  }, [hovered, effectiveIsPhotoVisible]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent | TouchEvent) => {
@@ -96,7 +99,8 @@ export function AvatarEasterEgg({ activeSlide, children }: AvatarEasterEggProps)
         return;
       }
 
-      if (!isPhotoVisible && avatarGroupRef.current) {
+      // Blokujemy otwieranie w trakcie chodzenia
+      if (!effectiveIsPhotoVisible && currentAnim !== 'Walking' && avatarGroupRef.current) {
         let clientX, clientY;
         if ('touches' in e && e.touches.length > 0) {
           clientX = e.touches[0].clientX;
@@ -129,12 +133,11 @@ export function AvatarEasterEgg({ activeSlide, children }: AvatarEasterEggProps)
       window.removeEventListener('click', handleClick as EventListener);
       window.removeEventListener('touchstart', handleClick as EventListener);
     };
-  }, [camera, raycaster, isPhotoVisible]);
+  }, [camera, raycaster, effectiveIsPhotoVisible, currentAnim]);
 
   useEffect(() => {
-    // Nasłuchujemy na kliknięcie w zdjęcie, aby je zamknąć
+    // Nasłuchujemy na kliknięcie w zdjęcie (lub przycisk zamknięcia), aby je wyłączyć
     const unsub = polaroidStore.subscribe((state) => {
-      // Zewnętrzny komponent `PolaroidOverlay` zaktualizuje `visible` na `false` przy kliknięciu
       if (!state.visible && isPhotoVisible) {
         setIsPhotoVisible(false);
       }
