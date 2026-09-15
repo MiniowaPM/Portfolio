@@ -14,11 +14,11 @@ function ContactSlide({ topOffset, setToast }: ContactSlideProps) {
 
   return (
     <section
-      className="slide-panel pointer-events-auto absolute left-[300vw] flex h-screen w-screen flex-col justify-center px-8 md:pr-12 md:pl-[50vw] lg:pr-24"
+      className="slide-panel pointer-events-none absolute left-[300vw] flex h-screen w-screen flex-col justify-center px-8 md:pr-12 md:pl-[50vw] lg:pr-24"
       style={{ top: topOffset }}
     >
-      <div className="ml-auto flex max-w-xl flex-col items-end gap-8 text-right">
-        <div>
+      <div className="pointer-events-none ml-auto flex w-fit max-w-xl flex-col items-end gap-8 text-right">
+        <div className="pointer-events-none">
           <h2 className="text-base-content mb-4 text-5xl font-bold">Let's Connect</h2>
           <p className="text-base-content/80 text-lg leading-relaxed">
             I'm currently actively seeking a Junior Software Developer position. Whether you have a
@@ -28,7 +28,7 @@ function ContactSlide({ topOffset, setToast }: ContactSlideProps) {
         </div>
 
         {/* Główne przyciski akcji (Mail & CV) - dodano justify-end */}
-        <div className="flex flex-col justify-end gap-4 sm:flex-row">
+        <div className="pointer-events-auto flex flex-col justify-end gap-4 sm:flex-row">
           <a
             href="mailto:mikolaj.molodecki133@gmail.com"
             className="btn btn-primary btn-lg shadow-[0_0_15px_rgba(var(--color-primary),0.3)] transition-transform hover:scale-105"
@@ -74,7 +74,7 @@ function ContactSlide({ topOffset, setToast }: ContactSlideProps) {
         </div>
 
         {/* Linki do profili społecznościowych - dodano justify-end i w-full */}
-        <div className="border-base-content/10 mt-4 flex w-full items-center justify-end gap-6 border-t pt-6">
+        <div className="pointer-events-auto border-base-content/10 mt-4 flex w-full items-center justify-end gap-6 border-t pt-6">
           {/* GitHub */}
           <a
             href="https://github.com/MiniowaPM"

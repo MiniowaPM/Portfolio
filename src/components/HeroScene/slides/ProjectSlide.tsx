@@ -34,11 +34,11 @@ const ProjectSlide = forwardRef<HTMLElement>((_, ref) => {
   return (
     <section
       ref={ref}
-      className="slide-panel pointer-events-auto absolute top-0 left-[200vw] flex h-auto min-h-screen w-screen flex-col items-start px-8 pt-32 pb-32 md:pr-[45vw] md:pl-20"
+      className="slide-panel pointer-events-none absolute top-0 left-[200vw] flex h-auto min-h-screen w-screen flex-col items-start px-8 pt-32 pb-32 md:pr-[45vw] md:pl-20"
     >
       {/* Section Header */}
       <motion.div
-        className="sticky top-24 z-10 w-full max-w-3xl pb-6"
+        className="pointer-events-none sticky top-24 z-10 w-fit max-w-3xl pb-6"
         variants={headerVariants}
         initial="hidden"
         whileInView="visible"
@@ -50,14 +50,14 @@ const ProjectSlide = forwardRef<HTMLElement>((_, ref) => {
         </p>
       </motion.div>
 
-      <div className="mt-8 flex w-full max-w-3xl flex-col gap-10">
+      <div className="pointer-events-none mt-8 flex w-fit max-w-3xl flex-col gap-10">
         {/* GitHub Calendar */}
         <motion.div
           variants={cardVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
-          className="bg-base-200/60 border-base-content/10 flex w-full flex-col rounded-3xl border p-6 backdrop-blur-sm md:p-8"
+          className="pointer-events-auto bg-base-200/60 border-base-content/10 flex w-full flex-col rounded-3xl border p-6 backdrop-blur-sm md:p-8"
         >
           <h3 className="text-base-content mb-6 text-xl font-bold">GitHub Contributions</h3>
           <div className="w-full scrollbar-none overflow-x-auto [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
@@ -83,6 +83,7 @@ const ProjectSlide = forwardRef<HTMLElement>((_, ref) => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.1 }}
+            className="pointer-events-auto"
           >
             <ProjectCard variant="featured" {...proj} />
           </motion.div>
@@ -107,6 +108,7 @@ const ProjectSlide = forwardRef<HTMLElement>((_, ref) => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.1 }}
+                className="pointer-events-auto"
               >
                 <ProjectCard variant="grid" {...proj} />
               </motion.div>

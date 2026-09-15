@@ -15,8 +15,9 @@ const heroVariants: Variants = {
 
 function HeroSlide() {
   return (
-    <section className="slide-panel absolute top-0 left-0 flex h-screen w-screen flex-col justify-center px-8 md:pr-[40vw] md:pl-20">
-      <motion.h1
+    <section className="slide-panel pointer-events-none absolute top-0 left-0 flex h-screen w-screen flex-col justify-center px-8 md:pr-[40vw] md:pl-20">
+      <div className="pointer-events-none w-fit">
+        <motion.h1
         className="mb-4 text-6xl font-bold"
         custom={0.4}
         variants={heroVariants}
@@ -35,6 +36,7 @@ function HeroSlide() {
       >
         Software Engineer | Full Stack Developer | 3D Enthusiast
       </motion.span>
+      </div>
     </section>
   );
 }

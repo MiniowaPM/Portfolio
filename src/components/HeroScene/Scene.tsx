@@ -2,11 +2,13 @@ import { useFrame } from '@react-three/fiber';
 import { type RefObject, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Avatar } from './Avatar';
+import { AvatarEasterEgg } from './AvatarEasterEgg';
 
 type ActionName = 'Idle' | 'JumpAttack' | 'Typing' | 'Walking' | 'Waving';
 
 interface AvatarSceneProps {
   scrollRef: RefObject<number>;
+  activeSlide: number;
 }
 
 const MAX_SCENE_WIDTH = 50;
@@ -23,7 +25,7 @@ const slideCheckpoints = [
   { anim: 'Idle' as ActionName },
 ];
 
-export function AvatarScene({ scrollRef }: AvatarSceneProps) {
+export function AvatarScene({ scrollRef, activeSlide }: AvatarSceneProps) {
   const avatarGroup = useRef<THREE.Group>(null);
   const [currentAnim, setCurrentAnim] = useState<ActionName>('Idle');
   const walkSpeedRef = useRef(1);
@@ -223,7 +225,9 @@ export function AvatarScene({ scrollRef }: AvatarSceneProps) {
 
   return (
     <group ref={avatarGroup} scale={BASE_SCALE} position={[2.5, -2, -1.5]}>
-      <Avatar animation={currentAnim} walkSpeedRef={walkSpeedRef} />
+      <AvatarEasterEgg activeSlide={activeSlide}>
+        <Avatar animation={currentAnim} walkSpeedRef={walkSpeedRef} />
+      </AvatarEasterEgg>
     </group>
   );
 }

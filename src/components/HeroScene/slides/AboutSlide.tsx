@@ -29,22 +29,27 @@ const hobbiesVariants: Variants = {
 
 function AboutSlide() {
   return (
-    <section className="slide-panel pointer-events-auto absolute top-0 left-[100vw] flex h-screen w-screen flex-col justify-center px-8 md:pr-[45vw] md:pl-20">
-      <div className="flex max-w-2xl flex-col gap-6">
+    <section className="slide-panel pointer-events-none absolute top-0 left-[100vw] flex h-screen w-screen flex-col justify-center px-8 md:pr-[45vw] md:pl-20">
+      <div className="flex w-fit max-w-2xl flex-col gap-6">
         {/* 1. Nagłówek i tekst */}
         <motion.div
+          className="pointer-events-none"
           variants={textVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.5 }}
         >
           <h2 className="text-base-content mb-4 text-5xl font-bold">About Me</h2>
-          <p className="text-base-content/80 text-lg leading-relaxed">
-            Currently in my 4th year of Computer Science at the Maritime University, majoring in
-            Multimedia Systems. I thrive at the intersection of logic and creativity—whether that
-            means building robust mobile apps, architecting IoT systems, or programming game engines
-            and shaders. Always learning, always building.
-          </p>
+          <div className="text-base-content/80 space-y-4 text-lg">
+            <p>
+              I am an energetic Software Engineer specialized in web development and 3D experiences.
+            </p>
+            <p>
+              My journey began in the maritime industry, where I developed discipline and global
+              perspective before fully transitioning into software engineering. Today, I build
+              interactive, high-performance applications bridging standard UI with WebGL.
+            </p>
+          </div>
         </motion.div>
 
         {/* 2. Tech Stack */}

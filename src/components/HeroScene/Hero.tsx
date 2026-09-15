@@ -12,6 +12,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useEffect, useRef, useState } from 'react';
 import { useRouteTheme } from '../../hooks/useRouteTheme';
+import { PolaroidOverlay } from './PolaroidOverlay';
 import { AvatarScene } from './Scene';
 import AboutSlide from './slides/AboutSlide';
 import ContactSlide from './slides/ContactSlide';
@@ -180,7 +181,34 @@ export function Hero() {
       className="bg-base-100 text-base-content relative overflow-x-hidden transition-colors duration-300"
     >
       <div className="pointer-events-none fixed inset-0 z-0">
-        <Canvas eventSource={mainRef} camera={{ position: [0, 0, 5], fov: 45 }}>
+        <Canvas
+          eventSource={mainRef}
+          camera={{ position: [0, 0, 5], fov: 45 }}
+          onCreated={(state) => {
+            state.events.compute = (event, state) => {
+              // Bezpieczne pobieranie koordynatów (obsługa touch eventów na telefonach)
+              let clientX, clientY;
+              
+              const e = event as unknown as MouseEvent | TouchEvent;
+              if ('touches' in e && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+              } else if ('clientX' in e) {
+                clientX = (e as MouseEvent).clientX;
+                clientY = (e as MouseEvent).clientY;
+              } else {
+                return; // Ignoruj eventy bez koordynatów
+              }
+
+              // Pobieramy pozycję z viewportu, ignorując wysokość scrollowanego mainRef
+              const x = (clientX / window.innerWidth) * 2 - 1;
+              const y = -(clientY / window.innerHeight) * 2 + 1;
+              
+              state.pointer.set(x, y);
+              state.raycaster.setFromCamera(state.pointer, state.camera);
+            };
+          }}
+        >
           <directionalLight position={[2, 3, 4]} intensity={1.5} color="#fff0e0" />
           <ambientLight intensity={1.5} color="#ffd4b8" />
           <Sparkles
@@ -192,7 +220,7 @@ export function Hero() {
             opacity={0.3}
             color="#ffd4b8"
           />
-          <AvatarScene scrollRef={scrollProgress} />
+          <AvatarScene scrollRef={scrollProgress} activeSlide={activeSlide} />
           <EffectComposer>
             <Bloom luminanceThreshold={1.2} mipmapBlur intensity={1.5} />
             <Vignette eskil={false} offset={0.1} darkness={0.9} />
@@ -202,7 +230,10 @@ export function Hero() {
         </Canvas>
       </div>
 
-      <div ref={containerRef} className="relative h-screen w-screen overflow-hidden">
+      <div
+        ref={containerRef}
+        className="pointer-events-none relative h-screen w-screen overflow-hidden"
+      >
         <div
           ref={trackRef}
           className="pointer-events-none absolute top-0 left-0 h-screen w-screen will-change-transform"
@@ -250,6 +281,8 @@ export function Hero() {
           <span>Copied nick to clipboard!</span>
         </div>
       </div>
+
+      <PolaroidOverlay activeSlide={activeSlide} />
     </main>
   );
 }
