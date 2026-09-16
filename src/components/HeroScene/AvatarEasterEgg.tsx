@@ -24,7 +24,8 @@ export function AvatarEasterEgg({ activeSlide, children, currentAnim }: AvatarEa
 
   const { camera, raycaster } = useThree();
 
-  const currentGallery = PHOTO_DATA[activeSlide] || PHOTO_DATA[0];
+  const currentSlideData = PHOTO_DATA[activeSlide] || PHOTO_DATA[0];
+  const currentGallery = currentSlideData.photos;
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
