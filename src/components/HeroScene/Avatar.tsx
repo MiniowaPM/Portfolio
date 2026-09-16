@@ -93,16 +93,7 @@ export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
     });
   }, [actions, materials]);
 
-  useEffect(() => {
-    // Rozwiązanie problemu ze znikającym modelem przy animacjach!
-    // Bounding Box modelu liczy się dla T-pose. Przy niektórych animacjach (np. Waving) 
-    // kamera może nie widzieć oryginalnego Bounding Boxa i silnik przestaje renderować siatkę.
-    Object.values(nodes).forEach((node) => {
-      if ((node as THREE.SkinnedMesh).isSkinnedMesh) {
-        node.frustumCulled = false;
-      }
-    });
-  }, [nodes]);
+
 
   useEffect(() => {
     const currentAction = actions[animation];
@@ -177,45 +168,45 @@ export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
         <group name="Armature" rotation={[Math.PI / 2, 0, 0]} scale={0.018}>
           <primitive object={nodes.mixamorigHips} />
           <group name="Body">
-            <skinnedMesh
+            <skinnedMesh frustumCulled={false}
               name="Body_(merged)002"
               geometry={nodes['Body_(merged)002'].geometry}
               material={materials['N00_000_00_Body_00_SKIN (Instance).002']}
               skeleton={nodes['Body_(merged)002'].skeleton}
             />
-            <skinnedMesh
+            <skinnedMesh frustumCulled={false}
               name="Body_(merged)002_1"
               geometry={nodes['Body_(merged)002_1'].geometry}
               material={materials['N00_004_01_Shoes_01_CLOTH (Instance).002']}
               skeleton={nodes['Body_(merged)002_1'].skeleton}
             />
-            <skinnedMesh
+            <skinnedMesh frustumCulled={false}
               name="Body_(merged)002_2"
               geometry={nodes['Body_(merged)002_2'].geometry}
               material={materials['N00_001_01_Bottoms_01_CLOTH (Instance).002']}
               skeleton={nodes['Body_(merged)002_2'].skeleton}
             />
-            <skinnedMesh
+            <skinnedMesh frustumCulled={false}
               name="Body_(merged)002_3"
               geometry={nodes['Body_(merged)002_3'].geometry}
               material={materials['N00_005_01_Tops_01_CLOTH (Instance).002']}
               skeleton={nodes['Body_(merged)002_3'].skeleton}
             />
-            <skinnedMesh
+            <skinnedMesh frustumCulled={false}
               name="Body_(merged)002_4"
               geometry={nodes['Body_(merged)002_4'].geometry}
               material={materials['N00_000_00_HairBack_00_HAIR (Instance).002']}
               skeleton={nodes['Body_(merged)002_4'].skeleton}
             />
           </group>
-          <skinnedMesh
+          <skinnedMesh frustumCulled={false}
             name="Hair"
             geometry={nodes.Hair.geometry}
             material={materials['N00_000_Hair_00_HAIR (Instance).002']}
             skeleton={nodes.Hair.skeleton}
           />
           <group name="Face">
-            <skinnedMesh
+            <skinnedMesh frustumCulled={false}
               name="Face_(merged)(Clone)002"
               geometry={nodes['Face_(merged)(Clone)002'].geometry}
               material={materials['N00_000_00_FaceMouth_00_FACE (Instance).002']}
@@ -223,7 +214,7 @@ export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
               morphTargetDictionary={nodes['Face_(merged)(Clone)002'].morphTargetDictionary}
               morphTargetInfluences={nodes['Face_(merged)(Clone)002'].morphTargetInfluences}
             />
-            <skinnedMesh
+            <skinnedMesh frustumCulled={false}
               name="Face_(merged)(Clone)002_1"
               geometry={nodes['Face_(merged)(Clone)002_1'].geometry}
               material={materials['N00_000_00_EyeIris_00_EYE (Instance).002']}
@@ -231,7 +222,7 @@ export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
               morphTargetDictionary={nodes['Face_(merged)(Clone)002_1'].morphTargetDictionary}
               morphTargetInfluences={nodes['Face_(merged)(Clone)002_1'].morphTargetInfluences}
             />
-            <skinnedMesh
+            <skinnedMesh frustumCulled={false}
               name="Face_(merged)(Clone)002_2"
               geometry={nodes['Face_(merged)(Clone)002_2'].geometry}
               material={materials['N00_000_00_EyeHighlight_00_EYE (Instance).002']}
@@ -239,7 +230,7 @@ export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
               morphTargetDictionary={nodes['Face_(merged)(Clone)002_2'].morphTargetDictionary}
               morphTargetInfluences={nodes['Face_(merged)(Clone)002_2'].morphTargetInfluences}
             />
-            <skinnedMesh
+            <skinnedMesh frustumCulled={false}
               name="Face_(merged)(Clone)002_3"
               geometry={nodes['Face_(merged)(Clone)002_3'].geometry}
               material={materials['N00_000_00_Face_00_SKIN (Instance).002']}
@@ -247,7 +238,7 @@ export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
               morphTargetDictionary={nodes['Face_(merged)(Clone)002_3'].morphTargetDictionary}
               morphTargetInfluences={nodes['Face_(merged)(Clone)002_3'].morphTargetInfluences}
             />
-            <skinnedMesh
+            <skinnedMesh frustumCulled={false}
               name="Face_(merged)(Clone)002_4"
               geometry={nodes['Face_(merged)(Clone)002_4'].geometry}
               material={materials['N00_000_00_EyeWhite_00_EYE (Instance).002']}
@@ -255,7 +246,7 @@ export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
               morphTargetDictionary={nodes['Face_(merged)(Clone)002_4'].morphTargetDictionary}
               morphTargetInfluences={nodes['Face_(merged)(Clone)002_4'].morphTargetInfluences}
             />
-            <skinnedMesh
+            <skinnedMesh frustumCulled={false}
               name="Face_(merged)(Clone)002_5"
               geometry={nodes['Face_(merged)(Clone)002_5'].geometry}
               material={materials['N00_000_00_FaceBrow_00_FACE (Instance).002']}
@@ -263,7 +254,7 @@ export function Avatar({ animation, walkSpeedRef, ...props }: AvatarProps) {
               morphTargetDictionary={nodes['Face_(merged)(Clone)002_5'].morphTargetDictionary}
               morphTargetInfluences={nodes['Face_(merged)(Clone)002_5'].morphTargetInfluences}
             />
-            <skinnedMesh
+            <skinnedMesh frustumCulled={false}
               name="Face_(merged)(Clone)002_6"
               geometry={nodes['Face_(merged)(Clone)002_6'].geometry}
               material={materials['N00_000_00_FaceEyeline_00_FACE (Instance).002']}
