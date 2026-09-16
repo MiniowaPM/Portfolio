@@ -29,15 +29,14 @@ export function PolaroidOverlay({ activeSlide }: { activeSlide: number }) {
         pointerEvents: data.visible ? 'auto' : 'none',
         opacity: data.visible ? 1 : 0,
         transition: 'opacity 0.3s ease-in-out',
-        // Używamy dynamicznego offsetX i offsetY zdefiniowanych w pliku data
         transform: `translate3d(calc(-50% + ${offsetX}), calc(-50% + ${offsetY}), 0) translate3d(${data.x}px, ${data.y}px, 0)`,
       }}
     >
       <div
         onClick={handlePhotoClick}
-        className="group relative w-80 cursor-pointer rounded-sm bg-white p-4 pb-16 shadow-2xl transition-transform hover:scale-105 md:w-[26rem]"
+        className="group relative w-80 cursor-pointer rounded-sm bg-white p-4 pb-16 shadow-2xl transition-transform hover:scale-105 md:w-104"
       >
-        <div className="relative h-80 w-full overflow-hidden bg-gray-200 md:h-[26rem]">
+        <div className="relative h-80 w-full overflow-hidden bg-gray-200 md:h-104">
           <AnimatePresence mode="wait">
             <motion.img
               key={currentPhoto.src}

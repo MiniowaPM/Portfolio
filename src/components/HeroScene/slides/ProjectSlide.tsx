@@ -1,4 +1,4 @@
-import { motion, type Variants } from 'framer-motion'; // DODANY IMPORT
+import { motion, type Variants } from 'framer-motion';
 import { forwardRef } from 'react';
 import { GitHubCalendar } from 'react-github-calendar';
 import { FEATURED_PROJECTS, GRID_PROJECTS } from '../../../data/projectData';
@@ -60,8 +60,10 @@ const ProjectSlide = forwardRef<HTMLElement>((_, ref) => {
           className="pointer-events-auto bg-base-200/60 border-base-content/10 flex w-full flex-col rounded-3xl border p-6 backdrop-blur-sm md:p-8"
         >
           <h3 className="text-base-content mb-6 text-xl font-bold">GitHub Contributions</h3>
-          <div className="w-full scrollbar-none overflow-x-auto [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-            <GitHubCalendar
+          {/* Używamy sztuczki CSS z direction: rtl, aby pasek scrolla domyślnie startował od prawej strony */}
+          <div className="w-full scrollbar-none overflow-x-auto [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [direction:rtl]">
+            <div className="[direction:ltr] w-max">
+              <GitHubCalendar
               username="MiniowaPM"
               colorScheme="dark"
               blockSize={12}
@@ -72,6 +74,7 @@ const ProjectSlide = forwardRef<HTMLElement>((_, ref) => {
                 light: ['#292521', '#63471e', '#9e7323', '#d19d28', '#ffbe2b'],
               }}
             />
+            </div>
           </div>
         </motion.div>
 

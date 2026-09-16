@@ -131,6 +131,13 @@ export const FEATURED_PROJECTS: ProjectItem[] = [
     status: 'In Progress',
     team: 'Solo',
     imagePlaceholder: 'Ocean Rendering Screenshot',
+    images: [
+      '/images/ShipSim/1.jpg',
+      '/images/ShipSim/2.jpg',
+      '/images/ShipSim/3.jpg',
+      '/images/ShipSim/4.jpg',
+    ],
+
     deviceType: 'none',
     links: [
       {
