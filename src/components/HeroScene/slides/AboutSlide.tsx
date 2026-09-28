@@ -98,7 +98,7 @@ function AboutSlide() {
             'Appwrite',
             'FastAPI',
             'Flask',
-            'Spring Boot',
+            'Next.js',
             'Docker',
             'Git',
           ].map((tech) => (
