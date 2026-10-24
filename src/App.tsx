@@ -10,7 +10,16 @@ const ScrollToTop: React.FC = () => {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    if (!hash) {
+    if (hash) {
+      const id = hash.replace('#', '');
+      const timer = setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 60);
+      return () => clearTimeout(timer);
+    } else {
       window.scrollTo(0, 0);
     }
   }, [pathname, hash]);

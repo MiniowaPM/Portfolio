@@ -10,6 +10,7 @@ export const HomePage: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
+    document.title = 'Mikołaj Mołodecki — Software Engineer';
     if (location.hash) {
       const id = location.hash.replace('#', '');
       const el = document.getElementById(id);

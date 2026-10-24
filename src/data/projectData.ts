@@ -409,6 +409,28 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
 
 export const GRID_PROJECTS: ArchiveProject[] = [
   {
+    title: 'NavigatorPM — Campus Wayfinding',
+    description: {
+      en: 'Indoor university campus transit navigation with optimal pathfinding graph algorithms and dynamic map management dashboard.',
+      pl: 'Wewnątrzbudynkowa nawigacja po kampusie uczelni z silnikiem wyznaczania tras grafowych i panelem edycji mapy.',
+    },
+    techStack: ['React', 'TypeScript', 'Graph Algorithms', 'Node.js'],
+    status: 'In Progress',
+    team: 'Team',
+    links: [
+      {
+        label: 'Case Study →',
+        url: '/projects/navigator-pm',
+        primary: true,
+      },
+      {
+        label: 'GitHub ↗',
+        url: 'https://github.com/KNI-PM-Szczecin/NavigatorPM',
+        primary: false,
+      },
+    ],
+  },
+  {
     title: 'Maritime Autonomous Simulator',
     description: {
       en: 'Simulation system for testing autonomous navigation algorithms with dynamic sea conditions and hydrodynamic state feedback.',

@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { AppleAppStoreIcon, GitHubIcon, GooglePlayIcon, PlayIcon } from '../components/ui/BrandIcons';
 import { LightboxModal } from '../components/ui/LightboxModal';
+import { Footer } from '../components/layout/Footer';
 import { useLocale } from '../context/useLocale';
 import { FEATURED_PROJECTS } from '../data/projectData';
 import { translations } from '../i18n/translations';
 
 const COLOR_PAIRS: Record<
   string,
-  { bg: string; title: string; body: string; pillBg: string; pillText: string }
+  {
+    bg: string;
+    title: string;
+    body: string;
+    pillBg: string;
+    pillText: string;
+    tagBg: string;
+    tagText: string;
+  }
 > = {
   'ocean-simulation': {
     bg: '#0B3B59',
@@ -16,6 +26,8 @@ const COLOR_PAIRS: Record<
     body: '#E2F4FD',
     pillBg: '#B8E8FC',
     pillText: '#0B3B59',
+    tagBg: 'rgba(255, 255, 255, 0.15)',
+    tagText: '#FFFFFF',
   },
   'plan-pm': {
     bg: '#E9C0E9',
@@ -23,6 +35,8 @@ const COLOR_PAIRS: Record<
     body: '#1E2330',
     pillBg: '#502274',
     pillText: '#FFFFFF',
+    tagBg: 'rgba(80, 34, 116, 0.14)',
+    tagText: '#502274',
   },
   'world-of-drones': {
     bg: '#D2E823',
@@ -30,6 +44,8 @@ const COLOR_PAIRS: Record<
     body: '#1E2330',
     pillBg: '#254F1A',
     pillText: '#D2E823',
+    tagBg: 'rgba(37, 79, 26, 0.15)',
+    tagText: '#254F1A',
   },
   aleksy: {
     bg: '#502274',
@@ -37,6 +53,8 @@ const COLOR_PAIRS: Record<
     body: '#F3F3F1',
     pillBg: '#E9C0E9',
     pillText: '#502274',
+    tagBg: 'rgba(255, 255, 255, 0.15)',
+    tagText: '#FFFFFF',
   },
   'navigator-pm': {
     bg: '#254F1A',
@@ -44,6 +62,8 @@ const COLOR_PAIRS: Record<
     body: '#FFFFFF',
     pillBg: '#D2E823',
     pillText: '#1E2330',
+    tagBg: 'rgba(255, 255, 255, 0.15)',
+    tagText: '#FFFFFF',
   },
 };
 
@@ -55,10 +75,27 @@ export const ProjectDetailPage: React.FC = () => {
   const project = FEATURED_PROJECTS.find((p) => p.slug === slug);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [slug]);
+    if (project) {
+      document.title = `${project.title} — Mikołaj Mołodecki`;
+    }
+  }, [slug, project]);
+
+  useEffect(() => {
+    if (!isVideoModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsVideoModalOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isVideoModalOpen]);
 
   if (!project) {
     return (
@@ -76,6 +113,9 @@ export const ProjectDetailPage: React.FC = () => {
     );
   }
 
+  const currentIdx = FEATURED_PROJECTS.findIndex((p) => p.slug === slug);
+  const nextProject = FEATURED_PROJECTS[(currentIdx + 1) % FEATURED_PROJECTS.length];
+
   const colors =
     COLOR_PAIRS[project.slug] || {
       bg: '#254F1A',
@@ -83,9 +123,12 @@ export const ProjectDetailPage: React.FC = () => {
       body: '#FFFFFF',
       pillBg: '#D2E823',
       pillText: '#1E2330',
+      tagBg: 'rgba(255, 255, 255, 0.15)',
+      tagText: '#FFFFFF',
     };
 
   const selectedImage = project.images[selectedImageIndex] || project.images[0] || null;
+  const isPortrait = project.slug === 'plan-pm';
 
   const renderLinkIcon = (label: string) => {
     const l = label.toLowerCase();
@@ -149,29 +192,47 @@ export const ProjectDetailPage: React.FC = () => {
               {t.caseStudy.team}: {project.team}
             </span>
 
-            {/* Tech Stack Pills */}
+            {/* Tech Stack Pills (High Contrast) */}
             {project.techStack.map((tech) => (
               <span
                 key={tech}
-                className="rounded-full bg-[#FFFFFF]/15 px-3.5 py-2 font-sans text-[13px] font-bold text-[#FFFFFF]"
+                className="rounded-full px-3.5 py-2 font-sans text-[13px] font-bold transition-colors"
+                style={{ backgroundColor: colors.tagBg, color: colors.tagText }}
               >
                 {tech}
               </span>
             ))}
 
-            {/* External Links */}
-            {project.links.map((link, idx) => (
-              <a
-                key={idx}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-full bg-[#FFFFFF] px-5 py-2 font-sans text-[13.5px] font-bold text-[#1E2330] shadow-sm transition-transform hover:scale-105 active:scale-95"
-              >
-                {renderLinkIcon(link.label)}
-                <span>{link.label}</span>
-              </a>
-            ))}
+            {/* Links or Demo Modal Trigger */}
+            {project.links.map((link, idx) => {
+              const isDemo = link.label.toLowerCase().includes('demo');
+              if (isDemo) {
+                return (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setIsVideoModalOpen(true)}
+                    className="flex cursor-pointer items-center gap-2 rounded-full bg-[#FFFFFF] px-5 py-2 font-sans text-[13.5px] font-bold text-[#1E2330] shadow-sm transition-transform hover:scale-105 active:scale-95"
+                  >
+                    {renderLinkIcon(link.label)}
+                    <span>{link.label}</span>
+                  </button>
+                );
+              }
+
+              return (
+                <a
+                  key={idx}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-full bg-[#FFFFFF] px-5 py-2 font-sans text-[13.5px] font-bold text-[#1E2330] shadow-sm transition-transform hover:scale-105 active:scale-95"
+                >
+                  {renderLinkIcon(link.label)}
+                  <span>{link.label}</span>
+                </a>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -186,14 +247,14 @@ export const ProjectDetailPage: React.FC = () => {
             <div className="overflow-hidden rounded-[36px] bg-[#FFFFFF] p-4 shadow-sm md:p-6">
               <div
                 onClick={() => setIsLightboxOpen(true)}
-                className="group relative flex min-h-[360px] w-full max-h-[640px] cursor-pointer items-center justify-center overflow-hidden rounded-[26px] bg-[#1E2330] p-2 md:min-h-[480px]"
+                className="group relative flex min-h-[360px] w-full max-h-[640px] cursor-pointer items-center justify-center overflow-hidden rounded-[26px] bg-[#1E2330] p-3 md:min-h-[480px]"
               >
                 <img
                   src={selectedImage}
                   alt={project.title}
                   className="max-h-[600px] w-auto max-w-full rounded-[18px] object-contain shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"
                 />
-                <div className="absolute top-4 right-4 rounded-full bg-black/50 px-4 py-1.5 font-sans text-[12px] font-bold text-white opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100">
+                <div className="absolute top-4 right-4 rounded-full bg-black/60 px-4 py-1.5 font-sans text-[12px] font-bold text-white opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100">
                   Full Screen ↗
                 </div>
               </div>
@@ -206,7 +267,9 @@ export const ProjectDetailPage: React.FC = () => {
                       key={idx}
                       type="button"
                       onClick={() => setSelectedImageIndex(idx)}
-                      className={`relative h-20 w-32 shrink-0 cursor-pointer overflow-hidden rounded-[16px] border-2 transition-all ${
+                      className={`relative shrink-0 cursor-pointer overflow-hidden rounded-[16px] border-2 transition-all ${
+                        isPortrait ? 'h-28 w-14 bg-black p-1' : 'h-20 w-32 bg-black'
+                      } ${
                         selectedImageIndex === idx
                           ? 'border-[#254F1A] scale-105 opacity-100 shadow-md'
                           : 'border-transparent opacity-60 hover:opacity-100'
@@ -215,7 +278,7 @@ export const ProjectDetailPage: React.FC = () => {
                       <img
                         src={img}
                         alt={`Thumbnail ${idx + 1}`}
-                        className="h-full w-full object-cover"
+                        className={`h-full w-full ${isPortrait ? 'object-contain' : 'object-cover'}`}
                       />
                     </button>
                   ))}
@@ -289,12 +352,78 @@ export const ProjectDetailPage: React.FC = () => {
         </div>
       </section>
 
+      {/* =========================================================================
+          NEXT PROJECT NAVIGATION BANNER
+      ========================================================================= */}
+      <section className="w-full bg-[#1E2330] py-16 text-white md:py-20">
+        <div className="mx-auto max-w-[1240px] px-4 md:px-6">
+          <div className="flex flex-col items-start justify-between gap-6 rounded-[36px] bg-white/5 p-8 border border-white/10 md:flex-row md:items-center md:p-12">
+            <div>
+              <span className="font-sans text-[13px] font-black uppercase tracking-wider text-[#D2E823]">
+                {locale === 'en' ? 'Next Project' : 'Kolejny Projekt'}
+              </span>
+              <h3 className="mt-2 font-display text-[32px] font-black tracking-[-0.03em] text-white sm:text-[40px]">
+                {nextProject.title}
+              </h3>
+              <p className="mt-2 max-w-xl font-sans text-[15.5px] font-medium text-white/70">
+                {nextProject.shortDescription[locale]}
+              </p>
+            </div>
+            <Link
+              to={`/projects/${nextProject.slug}`}
+              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#D2E823] px-7 py-3.5 font-sans text-[14.5px] font-bold text-[#1E2330] shadow-lg transition-transform hover:scale-105 active:scale-95"
+            >
+              <span>{locale === 'en' ? 'Explore Case Study' : 'Zobacz Case Study'}</span>
+              <span>→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Global Footer */}
+      <Footer theme="dark" />
+
+      {/* Embedded Video Modal */}
+      <AnimatePresence>
+        {isVideoModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
+            onClick={() => setIsVideoModalOpen(false)}
+          >
+            <div
+              className="relative flex aspect-[9/16] h-[80vh] max-h-[720px] max-w-[90vw] flex-col overflow-hidden rounded-[36px] bg-[#1E2330] shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setIsVideoModalOpen(false)}
+                className="absolute top-4 right-4 z-20 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-md transition-transform hover:scale-110 active:scale-95"
+                aria-label="Close video"
+              >
+                ✕
+              </button>
+
+              <iframe
+                src="https://www.youtube.com/embed/V51wDqSVl7A?autoplay=1"
+                title="ALEKSY Edge Voice Assistant Demo"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="h-full w-full"
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Fullscreen Lightbox Modal */}
       <LightboxModal
         isOpen={isLightboxOpen}
         onClose={() => setIsLightboxOpen(false)}
         images={project.images.map((img) => ({
-          src: img,
+          src: project.slug === 'plan-pm' ? img.replace('/images/PlanPM/', '/images/PlanPM/full/') : img,
           caption: project.title,
         }))}
         currentIndex={selectedImageIndex}

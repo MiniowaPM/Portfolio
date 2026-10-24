@@ -231,6 +231,30 @@ export const FeaturedBentoGrid: React.FC = () => {
     return () => clearInterval(timer);
   }, [isAleksyHovered, isAleksySurging, activeAleksyIdx, aleksyProj.images.length, triggerAleksyWaveTo]);
 
+  // Modal keyboard listeners (Escape, Arrow Left/Right) & background scroll lock
+  useEffect(() => {
+    if (!isPlanModalOpen && !isVideoModalOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsPlanModalOpen(false);
+        setIsVideoModalOpen(false);
+      }
+      if (isPlanModalOpen) {
+        if (e.key === 'ArrowRight') handleNextPlanScreen();
+        if (e.key === 'ArrowLeft') handlePrevPlanScreen();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isPlanModalOpen, isVideoModalOpen, handleNextPlanScreen, handlePrevPlanScreen]);
+
   return (
     <div id="work" className="w-full">
       {/* =========================================================================
@@ -947,7 +971,7 @@ export const FeaturedBentoGrid: React.FC = () => {
 
               <div className="relative aspect-[9/20] h-[78vh] max-h-[760px] overflow-hidden rounded-[26px] bg-black">
                 <img
-                  src={planProj.images[activePlanIdx]}
+                  src={planProj.images[activePlanIdx].replace('/images/PlanPM/', '/images/PlanPM/full/')}
                   alt={`PlanPM Screen ${activePlanIdx + 1}`}
                   className="h-full w-full object-contain"
                 />

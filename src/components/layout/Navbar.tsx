@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '../../context/useLocale';
 import { translations } from '../../i18n/translations';
 
@@ -8,7 +9,8 @@ export const Navbar: React.FC = () => {
   const t = translations[locale];
   const location = useLocation();
   const isHomePage = location.pathname === '/';
-  const [scrolledSection, setScrolledSection] = React.useState<string | null>(null);
+  const [scrolledSection, setScrolledSection] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const activeSection = isHomePage ? scrolledSection : null;
 
   React.useEffect(() => {
@@ -35,7 +37,9 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isHomePage]);
 
+
   const handleScrollTo = (id: string) => {
+    setIsMobileMenuOpen(false);
     if (location.pathname === '/') {
       const element = document.getElementById(id);
       if (element) {
@@ -59,7 +63,7 @@ export const Navbar: React.FC = () => {
           <span className="ml-1.5">Mołodecki</span>
         </Link>
 
-        {/* Center: Clean Nav Links with stable widths */}
+        {/* Center: Clean Nav Links with stable widths (Desktop) */}
         <div className="hidden items-center gap-1 sm:flex">
           {location.pathname === '/' ? (
             <button
@@ -109,8 +113,8 @@ export const Navbar: React.FC = () => {
           )}
         </div>
 
-        {/* Right Actions: Language Toggle & CV Pill Button */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Right Actions: Language Toggle & CV Pill Button (Desktop) */}
+        <div className="hidden sm:flex items-center gap-2 sm:gap-3">
           <div className="flex items-center rounded-full bg-[#F3F3F1] p-1 font-sans text-[13.5px] font-bold">
             <button
               type="button"
@@ -147,7 +151,121 @@ export const Navbar: React.FC = () => {
             {t.nav.cv}
           </a>
         </div>
+
+        {/* Mobile Menu Hamburger Button */}
+        <button
+          type="button"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#F3F3F1] text-[#1E2330] transition-colors hover:bg-[#E5E5E0] sm:hidden"
+          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+        >
+          {isMobileMenuOpen ? (
+            <span className="text-xl font-bold leading-none">✕</span>
+          ) : (
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
+        </button>
       </nav>
+
+      {/* Mobile Animated Dropdown Menu Card */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            className="mt-2.5 flex flex-col gap-1.5 rounded-[28px] bg-[#FFFFFF] p-3 shadow-[0_16px_40px_rgba(0,0,0,0.16)] sm:hidden border border-black/5"
+          >
+            {location.pathname === '/' ? (
+              <button
+                type="button"
+                onClick={() => handleScrollTo('work')}
+                className="flex h-11 w-full cursor-pointer items-center justify-between rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
+              >
+                <span>{t.nav.projects}</span>
+                <span>→</span>
+              </button>
+            ) : (
+              <Link
+                to="/#work"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex h-11 w-full items-center justify-between rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
+              >
+                <span>{t.nav.projects}</span>
+                <span>→</span>
+              </Link>
+            )}
+
+            <Link
+              to="/about"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex h-11 w-full items-center justify-between rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
+            >
+              <span>{t.nav.about}</span>
+              <span>→</span>
+            </Link>
+
+            {location.pathname === '/' ? (
+              <button
+                type="button"
+                onClick={() => handleScrollTo('contact')}
+                className="flex h-11 w-full cursor-pointer items-center justify-between rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
+              >
+                <span>{t.nav.contact}</span>
+                <span>→</span>
+              </button>
+            ) : (
+              <Link
+                to="/#contact"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex h-11 w-full items-center justify-between rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
+              >
+                <span>{t.nav.contact}</span>
+                <span>→</span>
+              </Link>
+            )}
+
+            <div className="mt-1 pt-2.5 border-t border-black/5 flex items-center justify-between gap-3 px-1 pb-1">
+              <div className="flex items-center rounded-full bg-[#F3F3F1] p-1 font-sans text-[13px] font-bold">
+                <button
+                  type="button"
+                  onClick={() => setLocale('en')}
+                  className={`cursor-pointer rounded-full px-3 py-1.5 transition-colors ${
+                    locale === 'en'
+                      ? 'bg-[#1E2330] text-[#FFFFFF]'
+                      : 'text-[#1E2330] hover:text-black'
+                  }`}
+                >
+                  EN
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLocale('pl')}
+                  className={`cursor-pointer rounded-full px-3 py-1.5 transition-colors ${
+                    locale === 'pl'
+                      ? 'bg-[#1E2330] text-[#FFFFFF]'
+                      : 'text-[#1E2330] hover:text-black'
+                  }`}
+                >
+                  PL
+                </button>
+              </div>
+
+              <a
+                href="/content/Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-10 flex-1 items-center justify-center rounded-full bg-[#1E2330] px-5 font-sans text-[13.5px] font-bold text-[#FFFFFF] shadow-sm transition-transform active:scale-95"
+              >
+                {t.nav.cv}
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

@@ -9,41 +9,35 @@ export interface PhotoItem {
 export const PHOTO_DATA: Record<number, PhotoItem[]> = {
   // 0: Hero Portrait Cycler
   0: [
-    { src: '/images/HeroPage/Hero/1.jpg', caption: { en: 'Hello! 👋', pl: 'Cześć! 👋' } },
-    { src: '/images/HeroPage/Hero/2.jpg', caption: { en: 'Welcome to my world ✨', pl: 'Witaj w moim świecie ✨' } },
-    { src: '/images/HeroPage/Hero/3.jpg', caption: { en: 'Nice to see you! 👀', pl: 'Miło Cię widzieć! 👀' } },
-    { src: '/images/HeroPage/Hero/4.jpg', caption: { en: 'Ready to build 🚀', pl: 'Gotowy do działania 🚀' } },
-    { src: '/images/HeroPage/Hero/5.jpg', caption: { en: 'Enjoy your stay! ☕', pl: 'Rozgość się! ☕' } },
+    { src: '/images/HeroPage/Hero/1.jpg', caption: { en: 'Hello & Welcome', pl: 'Cześć i Dzień Dobry' } },
+    { src: '/images/HeroPage/Hero/2.jpg', caption: { en: 'Creative Engineering', pl: 'Kreatywna Inżynieria' } },
+    { src: '/images/HeroPage/Hero/3.jpg', caption: { en: 'Full-Stack Developer', pl: 'Inżynier Oprogramowania' } },
+    { src: '/images/HeroPage/Hero/4.jpg', caption: { en: 'Building Systems', pl: 'Tworzenie Systemów' } },
+    { src: '/images/HeroPage/Hero/5.jpg', caption: { en: 'Enjoy Your Visit', pl: 'Miłego Przeglądania' } },
   ],
   // 1: Sports & Outdoors
   1: [
-    { src: '/images/HeroPage/AboutMe/1.jpg', caption: { en: 'Skiing Time! ⛷️', pl: 'Czas na narty! ⛷️' } },
-    { src: '/images/HeroPage/AboutMe/2.jpg', caption: { en: 'Kayaking Chilling 🛶', pl: 'Spływ kajakowy 🛶' } },
-    { src: '/images/HeroPage/AboutMe/3.jpg', caption: { en: 'Middle Attack! 🏐', pl: 'Atak ze środka! 🏐' } },
-    { src: '/images/HeroPage/AboutMe/4.jpg', caption: { en: 'Back in action 💪', pl: 'Powrót do gry 💪' } },
-    { src: '/images/HeroPage/AboutMe/5.jpg', caption: { en: 'Award winners! 🏆', pl: 'Na podium! 🏆' } },
+    { src: '/images/HeroPage/AboutMe/1.jpg', caption: { en: 'Alpine Skiing', pl: 'Narciarstwo Alpejskie' } },
+    { src: '/images/HeroPage/AboutMe/2.jpg', caption: { en: 'River Kayaking', pl: 'Spływ Kajakowy' } },
+    { src: '/images/HeroPage/AboutMe/3.jpg', caption: { en: 'Volleyball Middle Attack', pl: 'Atak ze Środka' } },
+    { src: '/images/HeroPage/AboutMe/4.jpg', caption: { en: 'University Championships', pl: 'Półfinały AMP' } },
+    { src: '/images/HeroPage/AboutMe/5.jpg', caption: { en: 'Tournament Podium', pl: 'Miejsce na Podium' } },
   ],
   // 2: Teamwork & Hackathons
   2: [
-    { src: '/images/HeroPage/Projects/1.jpg', caption: { en: 'Full focus 🧠', pl: 'Pełne skupienie 🧠' } },
-    { src: '/images/HeroPage/Projects/2.jpg', caption: { en: 'Cooking code... 💻', pl: 'Praca nad kodem... 💻' } },
-    { src: '/images/HeroPage/Projects/3.jpg', caption: 'Team effort 🤝', captionObj: { en: 'Team effort 🤝', pl: 'Współpraca zespołowa 🤝' } } as unknown as PhotoItem,
-    { src: '/images/HeroPage/Projects/4.jpg', caption: { en: 'Testing in prod... 🧪', pl: 'Testy wdrożeniowe... 🧪' } },
-    { src: '/images/HeroPage/Projects/5.jpg', caption: { en: 'Late night debugging 🦉', pl: 'Nocne debugowanie 🦉' } },
-    { src: '/images/HeroPage/Projects/6.jpg', caption: { en: 'Resting Struggle 😪', pl: 'Odpoczynek po wydaniu 😪' } },
+    { src: '/images/HeroPage/Projects/1.jpg', caption: { en: 'Engineering Focus', pl: 'Pełne Skupienie' } },
+    { src: '/images/HeroPage/Projects/2.jpg', caption: { en: 'Architecture & Coding', pl: 'Praca nad Kodem' } },
+    { src: '/images/HeroPage/Projects/3.jpg', caption: { en: 'Collaborative Sprint', pl: 'Współpraca Zespołowa' } },
+    { src: '/images/HeroPage/Projects/4.jpg', caption: { en: 'Deployment & Verification', pl: 'Testy i Wdrożenie' } },
+    { src: '/images/HeroPage/Projects/5.jpg', caption: { en: 'Late Night Debugging', pl: 'Nocny Sprint Projektowy' } },
+    { src: '/images/HeroPage/Projects/6.jpg', caption: { en: 'Post-Release Milestone', pl: 'Odpoczynek po Wydaniu' } },
   ],
   // 3: Contact
   3: [
-    { src: '/images/HeroPage/Contact/1.jpg', caption: { en: "Let's talk! 💬", pl: 'Porozmawiajmy! 💬' } },
-    { src: '/images/HeroPage/Contact/2.jpg', caption: { en: 'Drop me a message 📬', pl: 'Napisz wiadomość 📬' } },
-    { src: '/images/HeroPage/Contact/3.jpg', caption: { en: 'Open to work 💼', pl: 'Otwarty na współpracę 💼' } },
-    { src: '/images/HeroPage/Contact/4.jpg', caption: { en: "Let's build something! 🛠️", pl: 'Zbudujmy coś razem! 🛠️' } },
-    { src: '/images/HeroPage/Contact/5.jpg', caption: { en: 'Say hi! 👋', pl: 'Daj znać o sobie! 👋' } },
+    { src: '/images/HeroPage/Contact/1.jpg', caption: { en: "Let's Connect", pl: 'Nawiążmy Kontakt' } },
+    { src: '/images/HeroPage/Contact/2.jpg', caption: { en: 'Drop a Message', pl: 'Napisz Wiadomość' } },
+    { src: '/images/HeroPage/Contact/3.jpg', caption: { en: 'Open to Collaboration', pl: 'Otwarty na Współpracę' } },
+    { src: '/images/HeroPage/Contact/4.jpg', caption: { en: 'Building Solutions', pl: 'Wspólne Projekty' } },
+    { src: '/images/HeroPage/Contact/5.jpg', caption: { en: 'Direct Inquiry', pl: 'Zapraszam do Kontaktu' } },
   ],
-};
-
-// Fix the item 2[2] typing cleanly
-PHOTO_DATA[2][2] = {
-  src: '/images/HeroPage/Projects/3.jpg',
-  caption: { en: 'Team effort 🤝', pl: 'Współpraca zespołowa 🤝' },
 };

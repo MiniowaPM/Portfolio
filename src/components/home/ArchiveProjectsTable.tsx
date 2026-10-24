@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLocale } from '../../context/useLocale';
 import { GRID_PROJECTS } from '../../data/projectData';
@@ -21,64 +22,90 @@ export const ArchiveProjectsTable: React.FC = () => {
           </h2>
         </div>
 
-        {/* Card Deck Grid (3 Columns) */}
+        {/* Card Deck Grid (3 Columns x 3 Rows = 9 Cards) */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {GRID_PROJECTS.map((proj, idx) => {
-            const primaryLink = proj.links[0] || { label: 'GitHub ↗', url: '#' };
-
-            return (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
-                transition={{ delay: idx * 0.04, duration: 0.3 }}
-                whileHover={{ y: -6 }}
-                className="group flex flex-col justify-between rounded-[32px] bg-[#FFFFFF] p-7 shadow-sm transition-shadow duration-300 hover:shadow-xl"
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-full bg-[#F3F3F1] px-3 py-1 font-sans text-[12px] font-bold text-[#1E2330]">
-                      {proj.status}
-                    </span>
-                    <span className="font-sans text-[12.5px] font-bold text-[#71717A]">
-                      {proj.team}
-                    </span>
-                  </div>
-
-                  <h3 className="mt-4 font-display text-[22px] font-black tracking-[-0.025em] text-[#1E2330]">
-                    {proj.title}
-                  </h3>
-
-                  <p className="mt-2.5 font-sans text-[15px] font-medium leading-[1.6] text-[#4A4F5C]">
-                    {proj.description[locale]}
-                  </p>
+          {GRID_PROJECTS.map((proj, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ delay: idx * 0.04, duration: 0.3 }}
+              whileHover={{ y: -6 }}
+              className="group flex flex-col justify-between rounded-[32px] bg-[#FFFFFF] p-7 shadow-sm transition-shadow duration-300 hover:shadow-xl"
+            >
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="rounded-full bg-[#F3F3F1] px-3 py-1 font-sans text-[12px] font-bold text-[#1E2330]">
+                    {proj.status}
+                  </span>
+                  <span className="font-sans text-[12.5px] font-bold text-[#71717A]">
+                    {proj.team}
+                  </span>
                 </div>
 
-                <div className="mt-6 pt-5 border-t border-black/5 flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex flex-wrap gap-1.5">
-                    {proj.techStack.map((tech) => (
-                      <span
-                        key={tech}
-                        className="rounded-full bg-[#F3F3F1] px-3 py-1 font-sans text-[12px] font-bold text-[#1E2330]"
+                <h3 className="mt-4 font-display text-[22px] font-black tracking-[-0.025em] text-[#1E2330]">
+                  {proj.title}
+                </h3>
+
+                <p className="mt-2.5 font-sans text-[15px] font-medium leading-[1.6] text-[#4A4F5C]">
+                  {proj.description[locale]}
+                </p>
+              </div>
+
+              <div className="mt-6 pt-5 border-t border-black/5 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap gap-1.5">
+                  {proj.techStack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="rounded-full bg-[#F3F3F1] px-3 py-1 font-sans text-[12px] font-bold text-[#1E2330]"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  {proj.links.map((link, lIdx) => {
+                    const isInternal = link.url.startsWith('/');
+                    const isPrimary = link.primary || lIdx === 0;
+
+                    if (isInternal) {
+                      return (
+                        <Link
+                          key={lIdx}
+                          to={link.url}
+                          className={`flex h-9 items-center rounded-full px-4 font-sans text-[13px] font-bold shadow-sm transition-transform hover:scale-105 active:scale-95 ${
+                            isPrimary
+                              ? 'bg-[#254F1A] text-[#D2E823] hover:bg-[#1E2330]'
+                              : 'bg-[#F3F3F1] text-[#1E2330] hover:bg-[#E5E5E0]'
+                          }`}
+                        >
+                          {link.label}
+                        </Link>
+                      );
+                    }
+
+                    return (
+                      <a
+                        key={lIdx}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`flex h-9 items-center rounded-full px-4 font-sans text-[13px] font-bold shadow-sm transition-transform hover:scale-105 active:scale-95 ${
+                          isPrimary
+                            ? 'bg-[#1E2330] text-[#FFFFFF] group-hover:bg-[#254F1A] group-hover:text-[#D2E823]'
+                            : 'bg-[#F3F3F1] text-[#1E2330] hover:bg-[#E5E5E0]'
+                        }`}
                       >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-
-                  <a
-                    href={primaryLink.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex h-9 items-center rounded-full bg-[#1E2330] px-4 font-sans text-[13px] font-bold text-[#FFFFFF] shadow-sm transition-transform hover:scale-105 group-hover:bg-[#254F1A] group-hover:text-[#D2E823]"
-                  >
-                    {primaryLink.label}
-                  </a>
+                        {link.label}
+                      </a>
+                    );
+                  })}
                 </div>
-              </motion.div>
-            );
-          })}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

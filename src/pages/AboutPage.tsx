@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CheckIcon, CopyIcon, GitHubIcon, LinkedInIcon } from '../components/ui/BrandIcons';
+import { Footer } from '../components/layout/Footer';
 import { LightboxModal } from '../components/ui/LightboxModal';
 import { useLocale } from '../context/useLocale';
 import { PHOTO_DATA } from '../data/photoData';
@@ -13,10 +15,22 @@ export const AboutPage: React.FC = () => {
 
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText('mikolaj.molodecki133@gmail.com');
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2500);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    document.title = `${t.about.title} — Mikołaj Mołodecki`;
+  }, [t.about.title]);
 
   const sportsPhotos = PHOTO_DATA[1] || [];
   const teamPhotos = PHOTO_DATA[2] || [];
@@ -218,6 +232,75 @@ export const AboutPage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* =========================================================================
+          CONTACT CTA SECTION (Deep Burgundy #780016)
+      ========================================================================= */}
+      <section className="w-full bg-[#780016] py-20 text-center">
+        <div className="mx-auto max-w-[1240px] px-4 md:px-6">
+          <span className="font-sans text-[13px] font-black uppercase tracking-wider text-[#E9C0E9]">
+            {locale === 'en' ? 'Get In Touch' : 'Nawiążmy Kontakt'}
+          </span>
+          <h2 className="mx-auto mt-4 max-w-3xl font-display text-[36px] font-black leading-[1.05] tracking-[-0.035em] text-[#E9C0E9] sm:text-[48px]">
+            {locale === 'en' ? "Let's build something remarkable." : 'Zbudujmy coś niezwykłego.'}
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl font-sans text-[16px] font-medium text-[#F3F3F1]">
+            {t.contact.subtext}
+          </p>
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
+            <button
+              type="button"
+              onClick={handleCopyEmail}
+              className="flex h-12 min-w-[170px] cursor-pointer items-center justify-center gap-2 rounded-full bg-[#D2E823] px-7 font-sans text-[14.5px] font-bold text-[#1E2330] shadow-lg transition-transform hover:scale-105 active:scale-95"
+            >
+              {isCopied ? (
+                <>
+                  <CheckIcon className="h-4 w-4 text-[#254F1A]" />
+                  <span>{t.contact.copied} ✓</span>
+                </>
+              ) : (
+                <>
+                  <CopyIcon className="h-4 w-4 text-[#1E2330]" />
+                  <span>{t.contact.copyEmail}</span>
+                </>
+              )}
+            </button>
+
+            <a
+              href="https://github.com/MiniowaPM"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-12 items-center gap-2 rounded-full bg-[#E9C0E9] px-6 font-sans text-[14.5px] font-bold text-[#1E2330] shadow-md transition-transform hover:scale-105 active:scale-95"
+            >
+              <GitHubIcon className="h-4 w-4" />
+              <span>GitHub ↗</span>
+            </a>
+
+            <a
+              href="https://www.linkedin.com/in/miko%C5%82aj-mo%C5%82odecki-2b135043b/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-12 items-center gap-2 rounded-full bg-[#FFFFFF] px-6 font-sans text-[14.5px] font-bold text-[#1E2330] shadow-md transition-transform hover:scale-105 active:scale-95"
+            >
+              <LinkedInIcon className="h-4 w-4" />
+              <span>LinkedIn ↗</span>
+            </a>
+
+            <a
+              href="/content/Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-12 items-center gap-2 rounded-full bg-[#254F1A] px-6 font-sans text-[14.5px] font-bold text-[#D2E823] shadow-md transition-transform hover:scale-105 active:scale-95"
+            >
+              <span>{t.contact.downloadCv} ↓</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Global Footer */}
+      <Footer theme="burgundy" />
 
       {/* Fullscreen Lightbox Modal */}
       <LightboxModal
