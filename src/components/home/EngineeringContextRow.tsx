@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from '../../context/useLocale';
 import { PHOTO_DATA } from '../../data/photoData';
-import { translations } from '../../i18n/translations';
+import { TrophyIcon, RocketIcon, GlobeIcon, VolleyballIcon, RotateIcon, PauseIcon } from '../ui/BrandIcons';
 
 interface ContributionDay {
   date: string;
@@ -26,12 +26,41 @@ const TECH_PILLS = [
 
 export const EngineeringContextRow: React.FC = () => {
   const { locale } = useLocale();
-  const t = translations[locale];
 
   const [contributions, setContributions] = useState<ContributionDay[]>([]);
   const [totalYearly, setTotalYearly] = useState<number>(347);
   const [publicReposCount, setPublicReposCount] = useState<number>(9);
   const [hoveredDay, setHoveredDay] = useState<ContributionDay | null>(null);
+
+  // Team Photo Cycling Deck
+  const teamPhotos = useMemo(() => [...PHOTO_DATA[1], ...PHOTO_DATA[2]], []);
+  const [teamPhotoIdx, setTeamPhotoIdx] = useState(4); // e.g. "Award winners! 🏆"
+  const [isTeamHovered, setIsTeamHovered] = useState(false);
+  const [teamProgress, setTeamProgress] = useState(0);
+
+  const handleNextTeamPhoto = useCallback(() => {
+    setTeamPhotoIdx((prev) => (prev + 1) % teamPhotos.length);
+    setTeamProgress(0);
+  }, [teamPhotos.length]);
+
+  useEffect(() => {
+    if (isTeamHovered) return;
+    const intervalTime = 50;
+    const totalDuration = 4200;
+    const step = (intervalTime / totalDuration) * 100;
+
+    const timer = setInterval(() => {
+      setTeamProgress((prev) => {
+        if (prev >= 100) {
+          handleNextTeamPhoto();
+          return 0;
+        }
+        return prev + step;
+      });
+    }, intervalTime);
+
+    return () => clearInterval(timer);
+  }, [isTeamHovered, handleNextTeamPhoto]);
 
   // Fetch Contribution Data
   useEffect(() => {
@@ -43,9 +72,7 @@ export const EngineeringContextRow: React.FC = () => {
         if (data?.total?.lastYear) setTotalYearly(data.total.lastYear);
         if (Array.isArray(data?.contributions)) setContributions(data.contributions);
       })
-      .catch(() => {
-        // Fallback gracefully to default
-      });
+      .catch(() => {});
 
     fetch('https://api.github.com/users/MiniowaPM')
       .then((res) => res.json())
@@ -61,11 +88,11 @@ export const EngineeringContextRow: React.FC = () => {
     };
   }, []);
 
-  // Compute Active Days & Peak Day
+  // Compute Active Days, Peak Day & 26-Week Matrix
   const { activeDaysCount, peakDayCount, monthlyTotals, recentWeeks } = useMemo(() => {
     if (!contributions.length) {
       return {
-        activeDaysCount: 118,
+        activeDaysCount: 130,
         peakDayCount: 18,
         monthlyTotals: [
           { month: 'Nov', count: 28 },
@@ -102,23 +129,20 @@ export const EngineeringContextRow: React.FC = () => {
       count,
     }));
 
-    // Last 16 weeks (16 * 7 days)
-    const recent = contributions.slice(-112);
+    // Last 26 weeks (26 * 7 = 182 days) for full card width coverage
+    const recent = contributions.slice(-182);
     const weeks: ContributionDay[][] = [];
     for (let i = 0; i < recent.length; i += 7) {
       weeks.push(recent.slice(i, i + 7));
     }
 
     return {
-      activeDaysCount: active || 118,
+      activeDaysCount: active || 130,
       peakDayCount: peak || 18,
       monthlyTotals: monthList.length ? monthList : [],
       recentWeeks: weeks,
     };
   }, [contributions]);
-
-  const teamPhotos = [...PHOTO_DATA[1], ...PHOTO_DATA[2]];
-  const showcasePhoto = teamPhotos[4] || teamPhotos[0];
 
   const getColorForLevel = (level: number) => {
     switch (level) {
@@ -134,6 +158,8 @@ export const EngineeringContextRow: React.FC = () => {
         return '#EBEBE6';
     }
   };
+
+  const currentTeamPhoto = teamPhotos[teamPhotoIdx] || teamPhotos[0];
 
   return (
     <section className="w-full bg-[#FFFFFF] py-24 md:py-32">
@@ -179,7 +205,7 @@ export const EngineeringContextRow: React.FC = () => {
 
         {/* Main Activity Showcase Card */}
         <div className="mt-14 rounded-[40px] bg-[#F3F3F1] p-8 md:p-12">
-          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-14">
+          <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
             {/* Left Side (7 Cols): Custom GitHub Activity Dashboard */}
             <div className="flex flex-col justify-between lg:col-span-7">
               <div>
@@ -222,8 +248,8 @@ export const EngineeringContextRow: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Custom Monthly Activity Bar Chart */}
-                <div className="mt-8 rounded-[28px] bg-[#FFFFFF] p-6 shadow-sm">
+                {/* Custom Monthly Activity Bar Chart with guaranteed visible heights */}
+                <div className="mt-6 rounded-[28px] bg-[#FFFFFF] p-6 shadow-sm">
                   <div className="flex items-center justify-between">
                     <span className="font-sans text-[13.5px] font-bold text-[#1E2330]">
                       {locale === 'en' ? 'Monthly Coding Momentum' : 'Aktywność Miesięczna'}
@@ -233,23 +259,23 @@ export const EngineeringContextRow: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* 12 Vertical Bars */}
-                  <div className="mt-6 flex h-32 items-end justify-between gap-1.5 sm:gap-2">
+                  {/* 12 Vertical Columns */}
+                  <div className="mt-6 flex h-28 items-end justify-between gap-1.5 sm:gap-2.5">
                     {monthlyTotals.map((item, idx) => {
                       const maxCount = Math.max(...monthlyTotals.map((m) => m.count), 1);
-                      const heightPercent = Math.max(12, Math.round((item.count / maxCount) * 100));
+                      const barPixelHeight = Math.max(14, Math.min(84, Math.round((item.count / maxCount) * 84)));
 
                       return (
-                        <div key={idx} className="group relative flex flex-1 flex-col items-center">
+                        <div key={idx} className="group relative flex h-full flex-1 flex-col items-center justify-end">
                           {/* Tooltip on hover */}
-                          <div className="absolute -top-9 z-20 hidden rounded-full bg-[#1E2330] px-2.5 py-1 font-sans text-[11px] font-bold text-white shadow-lg group-hover:block whitespace-nowrap">
+                          <div className="absolute -top-7 z-20 hidden rounded-full bg-[#1E2330] px-2.5 py-0.5 font-sans text-[11px] font-bold text-white shadow-lg group-hover:block whitespace-nowrap">
                             {item.count} commits
                           </div>
 
-                          {/* Bar */}
+                          {/* Rendered Bar */}
                           <div
-                            style={{ height: `${heightPercent}%` }}
-                            className="w-full rounded-full bg-[#254F1A] transition-all duration-300 group-hover:bg-[#D2E823] group-hover:scale-y-105"
+                            style={{ height: `${barPixelHeight}px` }}
+                            className="w-full min-h-[14px] rounded-full bg-[#254F1A] transition-all duration-300 group-hover:bg-[#D2E823] group-hover:scale-y-105"
                           />
 
                           {/* Month Label */}
@@ -262,37 +288,42 @@ export const EngineeringContextRow: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Custom Tactile 16-Week Heatmap Matrix */}
-                {recentWeeks.length > 0 && (
-                  <div className="relative mt-6 rounded-[28px] bg-[#FFFFFF] p-6 shadow-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="font-sans text-[13px] font-bold text-[#1E2330]">
-                        {locale === 'en' ? 'Recent 16 Weeks Activity' : 'Ostatnie 16 Tygodni'}
-                      </span>
-                      {hoveredDay && (
-                        <span className="rounded-full bg-[#1E2330] px-3 py-0.5 font-sans text-[11.5px] font-bold text-white">
+                {/* Custom Tactile 26-Week Heatmap Matrix spanning full card width */}
+                <div className="mt-6 rounded-[28px] bg-[#FFFFFF] p-6 shadow-sm">
+                  <div className="flex h-7 items-center justify-between">
+                    <span className="font-sans text-[13px] font-bold text-[#1E2330]">
+                      {locale === 'en' ? 'Recent 26 Weeks Activity' : 'Ostatnie 26 Tygodni (Pół Roku)'}
+                    </span>
+                    <div className="flex h-6 min-w-[170px] items-center justify-end">
+                      {hoveredDay ? (
+                        <span className="rounded-full bg-[#1E2330] px-3 py-0.5 font-sans text-[11px] font-bold text-white">
                           {hoveredDay.date}: {hoveredDay.count} commits
+                        </span>
+                      ) : (
+                        <span className="font-sans text-[11.5px] font-semibold text-[#71717A]">
+                          {locale === 'en' ? 'Hover a day to inspect' : 'Najedź, aby sprawdzić'}
                         </span>
                       )}
                     </div>
-
-                    <div className="mt-4 flex gap-1.5 overflow-x-auto pb-1">
-                      {recentWeeks.map((week, wIdx) => (
-                        <div key={wIdx} className="flex flex-col gap-1.5">
-                          {week.map((day) => (
-                            <div
-                              key={day.date}
-                              style={{ backgroundColor: getColorForLevel(day.level) }}
-                              onMouseEnter={() => setHoveredDay(day)}
-                              onMouseLeave={() => setHoveredDay(null)}
-                              className="h-3.5 w-3.5 cursor-pointer rounded-[4px] transition-transform hover:scale-125"
-                            />
-                          ))}
-                        </div>
-                      ))}
-                    </div>
                   </div>
-                )}
+
+                  {/* Full-width 26 columns grid */}
+                  <div className="mt-4 flex w-full justify-between gap-1 overflow-x-auto pb-1">
+                    {recentWeeks.map((week, wIdx) => (
+                      <div key={wIdx} className="flex flex-col gap-1.5 flex-1 min-w-[8px] max-w-[16px]">
+                        {week.map((day) => (
+                          <div
+                            key={day.date}
+                            style={{ backgroundColor: getColorForLevel(day.level) }}
+                            onMouseEnter={() => setHoveredDay(day)}
+                            onMouseLeave={() => setHoveredDay(null)}
+                            className="aspect-square w-full cursor-pointer rounded-[3px] transition-transform hover:scale-125 hover:z-10"
+                          />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
                 {/* Segmented Top Languages Pill Bar */}
                 <div className="mt-6 rounded-[28px] bg-[#FFFFFF] p-5 shadow-sm">
@@ -335,26 +366,126 @@ export const EngineeringContextRow: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Side (5 Cols): Team & Award Spotlight */}
-            <div className="lg:col-span-5">
+            {/* Right Side (5 Cols): Balanced Deck with Team Shuffle & Key Milestones */}
+            <div className="flex flex-col gap-6 lg:col-span-5">
+              {/* Card 1: Team Photo Shuffle Deck */}
               <div className="overflow-hidden rounded-[36px] bg-[#FFFFFF] p-4 shadow-md">
-                <div className="relative aspect-[4/3.2] w-full overflow-hidden rounded-[26px] bg-[#1E2330]">
-                  <img
-                    src={showcasePhoto.src}
-                    alt={showcasePhoto.caption[locale]}
-                    className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                  />
+                <div
+                  onClick={handleNextTeamPhoto}
+                  onMouseEnter={() => setIsTeamHovered(true)}
+                  onMouseLeave={() => setIsTeamHovered(false)}
+                  title={locale === 'en' ? 'Click to shuffle team photo (Autoplay active)' : 'Kliknij, aby wyłonić kolejne zdjęcie zespołu (Autoodtwarzanie aktywne)'}
+                  className="relative aspect-[4/3.1] w-full cursor-pointer overflow-hidden rounded-[26px] bg-[#1E2330] select-none"
+                >
+                  <AnimatePresence mode="popLayout">
+                    <motion.img
+                      key={teamPhotoIdx}
+                      src={currentTeamPhoto.src}
+                      alt={currentTeamPhoto.caption[locale]}
+                      initial={{ scale: 0.93, y: 14, opacity: 0.8 }}
+                      animate={{ scale: 1, y: 0, opacity: 1 }}
+                      exit={{ x: -160, y: 30, rotate: -12, opacity: 0 }}
+                      transition={{ type: 'spring', stiffness: 280, damping: 24 }}
+                      className="h-full w-full object-cover select-none"
+                    />
+                  </AnimatePresence>
+
+                  {/* Shuffle Badge with Progress Line */}
+                  <div className="absolute top-3 right-3 z-10 flex flex-col gap-1 rounded-2xl bg-black/70 px-3 py-1.5 font-sans text-[11px] font-bold text-white shadow-md backdrop-blur-md">
+                    <div className="flex items-center gap-1.5">
+                      <span className={`${isTeamHovered ? 'text-amber-400' : 'text-[#D2E823]'}`}>
+                        {isTeamHovered ? <PauseIcon className="h-3 w-3" /> : <RotateIcon className="h-3 w-3" />}
+                      </span>
+                      <span>
+                        {isTeamHovered
+                          ? locale === 'en' ? 'Paused' : 'Wstrzymano'
+                          : locale === 'en' ? 'Autoplay' : 'Autoodtwarzanie'}
+                      </span>
+                    </div>
+                    <div className="h-0.5 w-full overflow-hidden rounded-full bg-white/20">
+                      <div
+                        className="h-full bg-[#D2E823] transition-all duration-75 ease-linear"
+                        style={{ width: `${isTeamHovered ? 100 : teamProgress}%` }}
+                      />
+                    </div>
+                  </div>
                 </div>
+
                 <div className="p-4">
                   <span className="font-sans text-[14.5px] font-bold text-[#1E2330]">
-                    {showcasePhoto.caption[locale]}
+                    {currentTeamPhoto.caption[locale]}
                   </span>
                   <Link
                     to="/about"
                     className="mt-2 block font-sans text-[13px] font-black text-[#254F1A] hover:underline"
                   >
-                    {t.engineering.morePhotos} →
+                    {locale === 'en' ? 'More team photos & story →' : 'Więcej zdjęć i historia zespołu →'}
                   </Link>
+                </div>
+              </div>
+
+              {/* Card 2: Key Milestones & Recognition Card (Balances column height perfectly) */}
+              <div className="rounded-[36px] bg-[#FFFFFF] p-6 shadow-md">
+                <span className="font-sans text-[12.5px] font-black uppercase tracking-wider text-[#254F1A]">
+                  {locale === 'en' ? 'Key Milestones & Leadership' : 'Osiągnięcia i Działalność'}
+                </span>
+
+                <div className="mt-4 space-y-3.5">
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#D2E823] text-[#254F1A]">
+                      <TrophyIcon className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <h4 className="font-sans text-[14px] font-bold text-[#1E2330]">
+                        {locale === 'en' ? '1st Place Hackathon Winner' : '1. Miejsce w Hackathonie'}
+                      </h4>
+                      <p className="font-sans text-[12.5px] text-[#71717A]">
+                        {locale === 'en' ? 'Project ŁatwaUstawa (Open Gov APIs & Local LLMs)' : 'Projekt ŁatwaUstawa (API Sejmowe & LLM)'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E9C0E9] text-[#502274]">
+                      <RocketIcon className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <h4 className="font-sans text-[14px] font-bold text-[#1E2330]">
+                        {locale === 'en' ? 'KNI Science Club Lead' : 'Lider w Kole Naukowym KNI'}
+                      </h4>
+                      <p className="font-sans text-[12.5px] text-[#71717A]">
+                        {locale === 'en' ? 'Architecture & Team Lead on PlanPM & NavigatorPM' : 'Architektura i koordynacja PlanPM oraz NavigatorPM'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#B8E8FC] text-[#0B3B59]">
+                      <GlobeIcon className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <h4 className="font-sans text-[14px] font-bold text-[#1E2330]">
+                        {locale === 'en' ? 'GlobalLogic IoT & AI Internship' : 'Staż IoT / Edge AI w GlobalLogic'}
+                      </h4>
+                      <p className="font-sans text-[12.5px] text-[#71717A]">
+                        {locale === 'en' ? 'Autonomous Drone Fleet & 3D Hardware Engineering' : 'Platforma World of Drones i projektowanie obudów 3D'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F3F3F1] text-[#254F1A]">
+                      <VolleyballIcon className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <h4 className="font-sans text-[14px] font-bold text-[#1E2330]">
+                        {locale === 'en' ? 'AZS Academic Volleyball Semifinalist' : 'Półfinalista AMP w Siatkówce'}
+                      </h4>
+                      <p className="font-sans text-[12.5px] text-[#71717A]">
+                        {locale === 'en' ? 'Maritime University Volleyball Representative' : 'Reprezentant Politechniki Morskiej w Szczecinie'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

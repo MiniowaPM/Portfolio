@@ -56,3 +56,34 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #254F1A;
 }
+
+@keyframes waveHorizontal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-wave-h {
+  animation: waveHorizontal 4s linear infinite;
+}
+
+.animate-wave-h-reverse {
+  animation: waveHorizontal 6s linear infinite reverse;
+}
+
+@keyframes rotorSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-rotor {
+  animation: rotorSpin 0.15s linear infinite;
+  transform-origin: center;
+}

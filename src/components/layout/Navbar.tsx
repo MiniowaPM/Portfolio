@@ -48,14 +48,15 @@ export const Navbar: React.FC = () => {
     <header className="fixed top-5 right-0 left-0 z-50 mx-auto w-[calc(100%-32px)] max-w-[1240px]">
       <nav
         aria-label="Global Navigation"
-        className="flex h-[72px] w-full items-center justify-between rounded-full bg-[#FFFFFF] px-3.5 pr-3 pl-6 shadow-[0_8px_30px_rgba(0,0,0,0.12)] md:px-5"
+        className="flex h-[72px] w-full items-center justify-between rounded-full bg-[#FFFFFF] pl-7 pr-3.5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] md:pl-8 md:pr-4"
       >
         {/* Left: Brand Name Wordmark */}
         <Link
           to="/"
-          className="font-display text-[19px] font-black tracking-[-0.03em] text-[#1E2330] transition-opacity hover:opacity-80"
+          className="inline-flex shrink-0 items-center font-display text-[19px] font-extrabold tracking-[-0.01em] text-[#1E2330] transition-opacity hover:opacity-80 whitespace-nowrap"
         >
-          Mikołaj Mołodecki
+          <span>Mikołaj</span>
+          <span className="ml-1.5">Mołodecki</span>
         </Link>
 
         {/* Center: Clean Nav Links with stable widths */}
