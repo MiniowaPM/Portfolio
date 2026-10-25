@@ -146,16 +146,16 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
     ],
     images: [
       '/images/PlanPM/8.jpg',
+      '/images/PlanPM/7.jpg',
       '/images/PlanPM/9.jpg',
+      '/images/PlanPM/10.jpg',
+      '/images/PlanPM/11.jpg',
+      '/images/PlanPM/6.jpg',
+      '/images/PlanPM/5.jpg',
       '/images/PlanPM/1.jpg',
       '/images/PlanPM/2.jpg',
       '/images/PlanPM/3.jpg',
       '/images/PlanPM/4.jpg',
-      '/images/PlanPM/5.jpg',
-      '/images/PlanPM/6.jpg',
-      '/images/PlanPM/7.jpg',
-      '/images/PlanPM/10.jpg',
-      '/images/PlanPM/11.jpg',
     ],
     caseStudy: {
       lead: {

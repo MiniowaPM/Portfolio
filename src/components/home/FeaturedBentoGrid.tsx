@@ -8,12 +8,12 @@ import {
   AppleAppStoreIcon,
   GooglePlayIcon,
   PlayIcon,
-  RotateIcon,
   PauseIcon,
   CameraIcon,
 } from '../ui/BrandIcons';
 import { OceanWaveCanvas } from './OceanWaveCanvas';
 import { DroneShutterCanvas } from './DroneShutterCanvas';
+import { ProjectShowcase3D } from './ProjectShowcase3D';
 
 // Animated Equalizer Bars for Voice Pulse
 const VoiceEqualizerBars: React.FC<{ isPlaying?: boolean }> = ({ isPlaying = true }) => (
@@ -47,41 +47,26 @@ export const FeaturedBentoGrid: React.FC = () => {
   const aleksyProj = FEATURED_PROJECTS.find((p) => p.slug === 'aleksy')!;
 
   // =========================================================================
-  // 1. PlanPM 3D Cylindrical Wheel Showcase (All 11 Screens, Forward & Backward)
+  // 1. PlanPM 3D Multi-Layered Showcase (All 11 Screens Continuous Autoplay)
   // =========================================================================
   const [activePlanIdx, setActivePlanIdx] = useState(0);
-  const [isPlanHovered, setIsPlanHovered] = useState(false);
-  const [planProgress, setPlanProgress] = useState(0);
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
 
   const handleNextPlanScreen = useCallback(() => {
     setActivePlanIdx((prev) => (prev + 1) % planProj.images.length);
-    setPlanProgress(0);
   }, [planProj.images.length]);
 
   const handlePrevPlanScreen = useCallback(() => {
     setActivePlanIdx((prev) => (prev - 1 + planProj.images.length) % planProj.images.length);
-    setPlanProgress(0);
   }, [planProj.images.length]);
 
   useEffect(() => {
-    if (isPlanHovered) return;
-    const intervalTime = 50;
-    const totalDuration = 5500;
-    const step = (intervalTime / totalDuration) * 100;
-
     const timer = setInterval(() => {
-      setPlanProgress((prev) => {
-        if (prev + step >= 100) {
-          handleNextPlanScreen();
-          return 0;
-        }
-        return prev + step;
-      });
-    }, intervalTime);
+      handleNextPlanScreen();
+    }, 4200);
 
     return () => clearInterval(timer);
-  }, [isPlanHovered, handleNextPlanScreen]);
+  }, [handleNextPlanScreen]);
 
   // =========================================================================
   // 2. Real-Time Ocean Simulation — Fast 1.05s Dark Navy Gerstner Wave
@@ -288,8 +273,40 @@ export const FeaturedBentoGrid: React.FC = () => {
               ))}
             </div>
 
+            {/* Interactive Feature Navigation Pills */}
+            <div className="mt-7 flex flex-col gap-2.5">
+              <span className="font-sans text-[11.5px] font-bold uppercase tracking-wider text-[#502274]/75">
+                {locale === 'en' ? 'Explore App Modules' : 'Podgląd modułów aplikacji'}
+              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                {[
+                  { label: { en: 'Timetable', pl: 'Plan zajęć' }, icon: '📅', idx: 0 },
+                  { label: { en: 'Widgets & News', pl: 'Widżety & Alert' }, icon: '⚡', idx: 1 },
+                  { label: { en: 'Dark Theme', pl: 'Motyw & Kolory' }, icon: '🎨', idx: 2 },
+                  { label: { en: 'Student Profile', pl: 'Grupy & Profil' }, icon: '🎓', idx: 4 },
+                ].map((tab) => {
+                  const isActive = activePlanIdx % planProj.images.length === tab.idx;
+                  return (
+                    <button
+                      key={tab.idx}
+                      type="button"
+                      onClick={() => setActivePlanIdx(tab.idx)}
+                      className={`flex cursor-pointer items-center gap-1.5 rounded-xl px-3.5 py-1.5 font-sans text-[12.5px] font-bold transition-all duration-200 ${
+                        isActive
+                          ? 'bg-[#502274] text-white shadow-md ring-2 ring-[#8B5CF6]/50 scale-[1.03]'
+                          : 'bg-[#502274]/12 text-[#502274] hover:bg-[#502274]/22 hover:scale-[1.02]'
+                      }`}
+                    >
+                      <span>{tab.icon}</span>
+                      <span>{tab.label[locale]}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Action Pills */}
-            <div className="mt-10 flex flex-wrap items-center gap-3">
+            <div className="mt-9 flex flex-wrap items-center gap-3">
               <Link
                 to={`/projects/${planProj.slug}`}
                 className="flex h-13 items-center rounded-full bg-[#502274] px-7 font-sans text-[15px] font-bold text-[#FFFFFF] shadow-md transition-transform hover:scale-[1.03] active:scale-95"
@@ -319,195 +336,15 @@ export const FeaturedBentoGrid: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: 3D Cylindrical Wheel Carousel Stage */}
-          <div
-            className="flex flex-col items-center justify-center lg:col-span-6"
-            onMouseEnter={() => setIsPlanHovered(true)}
-            onMouseLeave={() => setIsPlanHovered(false)}
-          >
-            {/* 3D Wheel Stage with Perspective */}
-            <div
-              className="relative flex h-[520px] w-full max-w-[600px] items-center justify-center select-none"
-              style={{ perspective: '1200px' }}
-            >
-              {planProj.images.map((imgSrc, imgIdx) => {
-                const total = planProj.images.length;
-                // Calculate shortest circular difference [-5 .. +5]
-                let diff = (imgIdx - activePlanIdx) % total;
-                if (diff > total / 2) diff -= total;
-                if (diff < -total / 2) diff += total;
-
-                // Circular 3D cylinder positions
-                let x: number;
-                let scale: number;
-                let rotateY: number;
-                let zIndex: number;
-                let opacity: number;
-                let brightness: number;
-
-                if (diff === 0) {
-                  // Active center phone (sharp 1:1 render, no filter)
-                  x = 0;
-                  scale = 1;
-                  rotateY = 0;
-                  zIndex = 30;
-                  opacity = 1;
-                  brightness = 1;
-                } else if (diff === -1) {
-                  // Left adjacent phone
-                  x = -132;
-                  scale = 0.86;
-                  rotateY = 14;
-                  zIndex = 20;
-                  opacity = 0.92;
-                  brightness = 0.92;
-                } else if (diff === 1) {
-                  // Right adjacent phone
-                  x = 132;
-                  scale = 0.86;
-                  rotateY = -14;
-                  zIndex = 20;
-                  opacity = 0.92;
-                  brightness = 0.92;
-                } else if (diff === -2) {
-                  // Far left phone
-                  x = -240;
-                  scale = 0.72;
-                  rotateY = 24;
-                  zIndex = 10;
-                  opacity = 0.6;
-                  brightness = 0.82;
-                } else if (diff === 2) {
-                  // Far right phone
-                  x = 240;
-                  scale = 0.72;
-                  rotateY = -24;
-                  zIndex = 10;
-                  opacity = 0.6;
-                  brightness = 0.82;
-                } else {
-                  // Parked invisibly around the back of the cylinder
-                  x = diff > 0 ? 320 : -320;
-                  scale = 0.5;
-                  rotateY = diff > 0 ? -35 : 35;
-                  zIndex = 1;
-                  opacity = 0;
-                  brightness = 0.6;
-                }
-
-                return (
-                  <motion.div
-                    key={`plan-wheel-phone-${imgIdx}`}
-                    animate={{
-                      x,
-                      scale,
-                      rotateY,
-                      zIndex,
-                      opacity,
-                      filter: diff === 0 ? 'none' : `brightness(${brightness})`,
-                    }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 240,
-                      damping: 24,
-                    }}
-                    onClick={() => {
-                      if (diff === 0) {
-                        setIsPlanModalOpen(true);
-                      } else {
-                        setActivePlanIdx(imgIdx);
-                        setPlanProgress(0);
-                      }
-                    }}
-                    title={
-                      diff === 0
-                        ? (locale === 'en' ? 'Click to zoom screenshot' : 'Kliknij, aby powiększyć zrzut ekranu')
-                        : (locale === 'en' ? 'Click to bring to front' : 'Kliknij, aby wysunąć na środek')
-                    }
-                    className={`absolute w-[180px] cursor-pointer overflow-hidden rounded-[36px] bg-[#1E2330] p-2 shadow-[0_24px_50px_rgba(80,34,116,0.32)] sm:w-[220px] ${
-                      diff === 0 ? 'hover:scale-[1.03]' : 'hover:opacity-100'
-                    }`}
-                    style={{
-                      pointerEvents: Math.abs(diff) <= 2 ? 'auto' : 'none',
-                      backfaceVisibility: 'hidden',
-                      WebkitBackfaceVisibility: 'hidden',
-                    }}
-                  >
-                    <div className="relative aspect-[9/20] w-full overflow-hidden rounded-[28px] bg-black">
-                      <img
-                        src={imgSrc}
-                        alt={`PlanPM screen ${imgIdx + 1}`}
-                        className="h-full w-full object-cover"
-                        style={{
-                          transform: 'translateZ(0)',
-                        }}
-                      />
-                      {/* Top Phone Speaker Notch */}
-                      <div className="absolute top-2 left-1/2 h-3 w-14 -translate-x-1/2 rounded-full bg-black/60 backdrop-blur-sm" />
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-
-            {/* Bottom 11-Screen Interactive Navigator with Autoplay Progress Bar */}
-            <div className="mt-4 flex flex-col items-center gap-3">
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={handlePrevPlanScreen}
-                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-[#502274]/20 text-sm font-bold text-[#502274] transition-colors hover:bg-[#502274]/35 active:scale-95"
-                  title="Previous screen (Rotate Wheel Right)"
-                >
-                  ←
-                </button>
-
-                <div className="flex items-center gap-1.5 rounded-full bg-[#502274]/15 px-4 py-2 font-sans text-[12.5px] font-bold text-[#502274]">
-                  <span>
-                    {isPlanHovered ? <PauseIcon className="h-3 w-3" /> : <RotateIcon className="h-3 w-3" />}
-                  </span>
-                  <span>
-                    {locale === 'en'
-                      ? `Screen ${activePlanIdx + 1} of ${planProj.images.length}`
-                      : `Ekran ${activePlanIdx + 1} z ${planProj.images.length}`}
-                  </span>
-                  {/* Miniature progress line */}
-                  <div className="ml-2 h-1.5 w-16 overflow-hidden rounded-full bg-[#502274]/20">
-                    <div
-                      className="h-full bg-[#502274] transition-all duration-75 ease-linear"
-                      style={{ width: `${isPlanHovered ? 100 : planProgress}%` }}
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleNextPlanScreen}
-                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-[#502274]/20 text-sm font-bold text-[#502274] transition-colors hover:bg-[#502274]/35 active:scale-95"
-                  title="Next screen (Rotate Wheel Left)"
-                >
-                  →
-                </button>
-              </div>
-
-              {/* 11 Screen Dots Bar */}
-              <div className="flex items-center gap-1.5">
-                {planProj.images.map((_, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => {
-                      setActivePlanIdx(idx);
-                      setPlanProgress(0);
-                    }}
-                    className={`h-2 rounded-full transition-all cursor-pointer ${
-                      activePlanIdx === idx ? 'w-6 bg-[#502274]' : 'w-2 bg-[#502274]/30 hover:bg-[#502274]/60'
-                    }`}
-                    title={`Jump to screen ${idx + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
+          {/* Right Column: Multi-Layered 3D Showcase Stage */}
+          <div className="flex flex-col items-center justify-center lg:col-span-6">
+            <ProjectShowcase3D
+              project={planProj}
+              activeIdx={activePlanIdx}
+              onOpenLightbox={() => setIsPlanModalOpen(true)}
+              locale={locale}
+              accentColor="#8B5CF6"
+            />
           </div>
         </div>
       </section>
