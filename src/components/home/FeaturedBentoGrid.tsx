@@ -273,45 +273,13 @@ export const FeaturedBentoGrid: React.FC = () => {
               ))}
             </div>
 
-            {/* Interactive Feature Navigation Pills */}
-            <div className="mt-7 flex flex-col gap-2.5">
-              <span className="font-sans text-[11.5px] font-bold uppercase tracking-wider text-[#502274]/75">
-                {locale === 'en' ? 'Explore App Modules' : 'Podgląd modułów aplikacji'}
-              </span>
-              <div className="flex flex-wrap items-center gap-2">
-                {[
-                  { label: { en: 'Timetable', pl: 'Plan zajęć' }, icon: '📅', idx: 0 },
-                  { label: { en: 'Widgets & News', pl: 'Widżety & Alert' }, icon: '⚡', idx: 1 },
-                  { label: { en: 'Dark Theme', pl: 'Motyw & Kolory' }, icon: '🎨', idx: 2 },
-                  { label: { en: 'Student Profile', pl: 'Grupy & Profil' }, icon: '🎓', idx: 4 },
-                ].map((tab) => {
-                  const isActive = activePlanIdx % planProj.images.length === tab.idx;
-                  return (
-                    <button
-                      key={tab.idx}
-                      type="button"
-                      onClick={() => setActivePlanIdx(tab.idx)}
-                      className={`flex cursor-pointer items-center gap-1.5 rounded-xl px-3.5 py-1.5 font-sans text-[12.5px] font-bold transition-all duration-200 ${
-                        isActive
-                          ? 'bg-[#502274] text-white shadow-md ring-2 ring-[#8B5CF6]/50 scale-[1.03]'
-                          : 'bg-[#502274]/12 text-[#502274] hover:bg-[#502274]/22 hover:scale-[1.02]'
-                      }`}
-                    >
-                      <span>{tab.icon}</span>
-                      <span>{tab.label[locale]}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
             {/* Action Pills */}
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <Link
                 to={`/projects/${planProj.slug}`}
                 className="flex h-13 items-center rounded-full bg-[#502274] px-7 font-sans text-[15px] font-bold text-[#FFFFFF] shadow-md transition-transform hover:scale-[1.03] active:scale-95"
               >
-                Case Study →
+                Case Study
               </Link>
 
               <a
@@ -321,7 +289,7 @@ export const FeaturedBentoGrid: React.FC = () => {
                 className="flex h-13 items-center gap-2 rounded-full bg-[#FFFFFF] px-5 font-sans text-[14.5px] font-bold text-[#1E2330] shadow-sm transition-transform hover:scale-[1.03] active:scale-95"
               >
                 <GooglePlayIcon className="h-4 w-4" />
-                <span>Google Play ↗</span>
+                <span>Google Play</span>
               </a>
 
               <a
@@ -331,7 +299,7 @@ export const FeaturedBentoGrid: React.FC = () => {
                 className="flex h-13 items-center gap-2 rounded-full bg-[#FFFFFF] px-5 font-sans text-[14.5px] font-bold text-[#1E2330] shadow-sm transition-transform hover:scale-[1.03] active:scale-95"
               >
                 <AppleAppStoreIcon className="h-4 w-4" />
-                <span>App Store ↗</span>
+                <span>App Store</span>
               </a>
             </div>
           </div>
@@ -386,7 +354,7 @@ export const FeaturedBentoGrid: React.FC = () => {
                 to={`/projects/${oceanProj.slug}`}
                 className="flex h-13 items-center rounded-full bg-[#B8E8FC] px-7 font-sans text-[15px] font-bold text-[#0B3B59] shadow-md transition-transform hover:scale-[1.03] active:scale-95"
               >
-                Case Study →
+                Case Study
               </Link>
 
               <a
@@ -395,7 +363,7 @@ export const FeaturedBentoGrid: React.FC = () => {
                 rel="noopener noreferrer"
                 className="flex h-13 items-center gap-2 rounded-full bg-[#FFFFFF]/15 px-6 font-sans text-[14.5px] font-bold text-[#FFFFFF] shadow-sm transition-transform hover:bg-[#FFFFFF]/25 hover:scale-[1.03] active:scale-95"
               >
-                <span>GitHub ↗</span>
+                <span>GitHub</span>
               </a>
             </div>
           </div>
@@ -576,7 +544,7 @@ export const FeaturedBentoGrid: React.FC = () => {
                     to={`/projects/${droneProj.slug}`}
                     className="inline-flex h-12 items-center rounded-full bg-[#254F1A] px-7 font-sans text-[14.5px] font-bold text-[#D2E823] shadow-md transition-transform hover:scale-105 active:scale-95"
                   >
-                    Case Study →
+                    Case Study
                   </Link>
                 </div>
               </div>
@@ -731,7 +699,7 @@ export const FeaturedBentoGrid: React.FC = () => {
                     to={`/projects/${aleksyProj.slug}`}
                     className="inline-flex h-12 items-center rounded-full bg-[#254F1A] px-7 font-sans text-[14.5px] font-bold text-[#D2E823] shadow-md transition-transform hover:scale-105 active:scale-95"
                   >
-                    Case Study →
+                    Case Study
                   </Link>
                   <button
                     type="button"
@@ -739,7 +707,7 @@ export const FeaturedBentoGrid: React.FC = () => {
                     className="inline-flex h-12 cursor-pointer items-center gap-2 rounded-full bg-[#E9C0E9] px-6 font-sans text-[14.5px] font-bold text-[#502274] shadow-md transition-transform hover:scale-105 active:scale-95"
                   >
                     <PlayIcon className="h-4 w-4 fill-current" />
-                    <span>Watch Demo ▶</span>
+                    <span>Watch Demo</span>
                   </button>
                 </div>
               </div>

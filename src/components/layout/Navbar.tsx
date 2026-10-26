@@ -183,48 +183,43 @@ export const Navbar: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleScrollTo('work')}
-                className="flex h-11 w-full cursor-pointer items-center justify-between rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
+                className="flex h-11 w-full cursor-pointer items-center justify-start rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
               >
                 <span>{t.nav.projects}</span>
-                <span>→</span>
               </button>
             ) : (
               <Link
                 to="/#work"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="flex h-11 w-full items-center justify-between rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
+                className="flex h-11 w-full items-center justify-start rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
               >
                 <span>{t.nav.projects}</span>
-                <span>→</span>
               </Link>
             )}
 
             <Link
               to="/about"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex h-11 w-full items-center justify-between rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
+              className="flex h-11 w-full items-center justify-start rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
             >
               <span>{t.nav.about}</span>
-              <span>→</span>
             </Link>
 
             {location.pathname === '/' ? (
               <button
                 type="button"
                 onClick={() => handleScrollTo('contact')}
-                className="flex h-11 w-full cursor-pointer items-center justify-between rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
+                className="flex h-11 w-full cursor-pointer items-center justify-start rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
               >
                 <span>{t.nav.contact}</span>
-                <span>→</span>
               </button>
             ) : (
               <Link
                 to="/#contact"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="flex h-11 w-full items-center justify-between rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
+                className="flex h-11 w-full items-center justify-start rounded-full px-5 font-sans text-[15px] font-bold text-[#1E2330] hover:bg-[#F3F3F1] active:bg-[#F3F3F1] transition-colors"
               >
                 <span>{t.nav.contact}</span>
-                <span>→</span>
               </Link>
             )}
 

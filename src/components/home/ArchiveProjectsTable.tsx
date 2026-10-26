@@ -44,9 +44,17 @@ export const ArchiveProjectsTable: React.FC = () => {
                   </span>
                 </div>
 
-                <h3 className="mt-4 font-display text-[22px] font-black tracking-[-0.025em] text-[#1E2330]">
-                  {proj.title}
-                </h3>
+                {proj.slug ? (
+                  <Link to={`/projects/${proj.slug}`}>
+                    <h3 className="mt-4 font-display text-[22px] font-black tracking-[-0.025em] text-[#1E2330] transition-colors hover:text-[#254F1A]">
+                      {proj.title}
+                    </h3>
+                  </Link>
+                ) : (
+                  <h3 className="mt-4 font-display text-[22px] font-black tracking-[-0.025em] text-[#1E2330]">
+                    {proj.title}
+                  </h3>
+                )}
 
                 <p className="mt-2.5 font-sans text-[15px] font-medium leading-[1.6] text-[#4A4F5C]">
                   {proj.description[locale]}

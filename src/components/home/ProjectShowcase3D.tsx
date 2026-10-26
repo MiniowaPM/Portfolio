@@ -314,48 +314,6 @@ export const ProjectShowcase3D: React.FC<ProjectShowcase3DProps> = ({
             className="relative"
           >
             {/* ===============================================================
-                LAYER 0: BACK FLOATING LIVE WIDGET CARD (z: -45px)
-                Creates deep 3D opposing parallax relative to front badge (z: +55px).
-                Styled after PlanPM's upcoming lecture lockscreen / home widget.
-            =============================================================== */}
-            <div
-              style={{
-                transform: 'translateZ(-45px) rotateZ(-7deg) rotateY(12deg)',
-                transformStyle: 'preserve-3d',
-                boxShadow:
-                  '0 24px 50px -10px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08)',
-              }}
-              className="pointer-events-none absolute -left-10 top-12 z-0 hidden w-[205px] flex-col gap-2 rounded-2xl border border-white/10 bg-[#14151D]/90 p-3 backdrop-blur-md sm:flex"
-            >
-              {/* Widget Header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-                  </span>
-                  <span className="font-sans text-[10px] font-bold uppercase tracking-wider text-zinc-400">
-                    {locale === 'en' ? 'Live Schedule' : 'Najbliższe zajęcia'}
-                  </span>
-                </div>
-                <span className="rounded-md bg-[#8B5CF6]/20 px-1.5 py-0.5 font-mono text-[9.5px] font-bold text-[#C49BFF]">
-                  LO2
-                </span>
-              </div>
-
-              {/* Lecture Item */}
-              <div className="flex flex-col rounded-xl border border-white/5 bg-[#1C1D27] p-2">
-                <span className="truncate font-sans text-[11.5px] font-bold text-white">
-                  Sztuczna inteligencja
-                </span>
-                <div className="mt-1 flex items-center justify-between text-[9.5px] font-medium text-zinc-400">
-                  <span>09:45 – 11:25</span>
-                  <span className="text-[#C49BFF]">WChrobrego 176</span>
-                </div>
-              </div>
-            </div>
-
-            {/* ===============================================================
                 LAYER 1: MAIN 3D PHONE CHASSIS (With Physical Extruded Rail)
                 Features:
                 - 8-slice Z-extrusion from 0px to -14px for seamless curved corners

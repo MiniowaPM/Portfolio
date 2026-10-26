@@ -20,7 +20,7 @@ export const PHOTO_DATA: Record<number, PhotoItem[]> = {
     { src: '/images/HeroPage/AboutMe/1.jpg', caption: { en: 'Alpine Skiing', pl: 'Narciarstwo Alpejskie' } },
     { src: '/images/HeroPage/AboutMe/2.jpg', caption: { en: 'River Kayaking', pl: 'Spływ Kajakowy' } },
     { src: '/images/HeroPage/AboutMe/3.jpg', caption: { en: 'Volleyball Middle Attack', pl: 'Atak ze Środka' } },
-    { src: '/images/HeroPage/AboutMe/4.jpg', caption: { en: 'University Championships', pl: 'Półfinały AMP' } },
+    { src: '/images/HeroPage/AboutMe/4.jpg', caption: { en: 'Winter Ski Trip', pl: 'Wyjazd Narciarski' } },
     { src: '/images/HeroPage/AboutMe/5.jpg', caption: { en: 'Tournament Podium', pl: 'Miejsce na Podium' } },
   ],
   // 2: Teamwork & Hackathons
@@ -32,12 +32,10 @@ export const PHOTO_DATA: Record<number, PhotoItem[]> = {
     { src: '/images/HeroPage/Projects/5.jpg', caption: { en: 'Late Night Debugging', pl: 'Nocny Sprint Projektowy' } },
     { src: '/images/HeroPage/Projects/6.jpg', caption: { en: 'Post-Release Milestone', pl: 'Odpoczynek po Wydaniu' } },
   ],
-  // 3: Contact
+  // 3: Lifestyle & Moments
   3: [
-    { src: '/images/HeroPage/Contact/1.jpg', caption: { en: "Let's Connect", pl: 'Nawiążmy Kontakt' } },
-    { src: '/images/HeroPage/Contact/2.jpg', caption: { en: 'Drop a Message', pl: 'Napisz Wiadomość' } },
-    { src: '/images/HeroPage/Contact/3.jpg', caption: { en: 'Open to Collaboration', pl: 'Otwarty na Współpracę' } },
-    { src: '/images/HeroPage/Contact/4.jpg', caption: { en: 'Building Solutions', pl: 'Wspólne Projekty' } },
-    { src: '/images/HeroPage/Contact/5.jpg', caption: { en: 'Direct Inquiry', pl: 'Zapraszam do Kontaktu' } },
+    { src: '/images/HeroPage/Contact/1.jpg', caption: { en: 'Cozy Fireplace Evening', pl: 'Wieczór przy Kominku' } },
+    { src: '/images/HeroPage/Contact/4.jpg', caption: { en: 'Good Food & Coffee Fuel', pl: 'Śniadanie i Dobra Kawa' } },
+    { src: '/images/HeroPage/Contact/5.jpg', caption: { en: 'Winter Cafe & Curious Cat', pl: 'Świąteczna Kawiarnia i Kot za Szybą' } },
   ],
 };

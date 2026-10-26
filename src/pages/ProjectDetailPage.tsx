@@ -65,6 +65,112 @@ const COLOR_PAIRS: Record<
     tagBg: 'rgba(255, 255, 255, 0.15)',
     tagText: '#FFFFFF',
   },
+  hubmi: {
+    bg: '#C52783',
+    title: '#FFFFFF',
+    body: '#FDF2F8',
+    pillBg: '#FFFFFF',
+    pillText: '#C52783',
+    tagBg: 'rgba(255, 255, 255, 0.2)',
+    tagText: '#FFFFFF',
+  },
+  'maritime-autonomous-simulator': {
+    bg: '#0C4A6E',
+    title: '#7DD3FC',
+    body: '#F0F9FF',
+    pillBg: '#7DD3FC',
+    pillText: '#082F49',
+    tagBg: 'rgba(255, 255, 255, 0.15)',
+    tagText: '#FFFFFF',
+  },
+  'latwa-ustawa': {
+    bg: '#1E293B',
+    title: '#FCD34D',
+    body: '#F8FAFC',
+    pillBg: '#FCD34D',
+    pillText: '#78350F',
+    tagBg: 'rgba(255, 255, 255, 0.15)',
+    tagText: '#FFFFFF',
+  },
+  'edek-chatbot': {
+    bg: '#064E3B',
+    title: '#A7F3D0',
+    body: '#ECFDF5',
+    pillBg: '#A7F3D0',
+    pillText: '#064E3B',
+    tagBg: 'rgba(255, 255, 255, 0.15)',
+    tagText: '#FFFFFF',
+  },
+  reptilia: {
+    bg: '#312E81',
+    title: '#C7D2FE',
+    body: '#EEF2FF',
+    pillBg: '#C7D2FE',
+    pillText: '#312E81',
+    tagBg: 'rgba(255, 255, 255, 0.15)',
+    tagText: '#FFFFFF',
+  },
+  'youtube-but-worst': {
+    bg: '#831843',
+    title: '#FBCFE8',
+    body: '#FDF2F8',
+    pillBg: '#FBCFE8',
+    pillText: '#831843',
+    tagBg: 'rgba(255, 255, 255, 0.15)',
+    tagText: '#FFFFFF',
+  },
+  cryptoapp: {
+    bg: '#14532D',
+    title: '#BBF7D0',
+    body: '#F0FDF4',
+    pillBg: '#BBF7D0',
+    pillText: '#14532D',
+    tagBg: 'rgba(255, 255, 255, 0.15)',
+    tagText: '#FFFFFF',
+  },
+  'matrix-calc': {
+    bg: '#334155',
+    title: '#E2E8F0',
+    body: '#F8FAFC',
+    pillBg: '#E2E8F0',
+    pillText: '#1E293B',
+    tagBg: 'rgba(255, 255, 255, 0.15)',
+    tagText: '#FFFFFF',
+  },
+  'ticket-procurement-bot': {
+    bg: '#1F2937',
+    title: '#FED7AA',
+    body: '#FFF7ED',
+    pillBg: '#FED7AA',
+    pillText: '#7C2D12',
+    tagBg: 'rgba(255, 255, 255, 0.15)',
+    tagText: '#FFFFFF',
+  },
+  'vat-sentinel': {
+    bg: '#0F172A',
+    title: '#38BDF8',
+    body: '#F0F9FF',
+    pillBg: '#38BDF8',
+    pillText: '#0F172A',
+    tagBg: 'rgba(255, 255, 255, 0.15)',
+    tagText: '#FFFFFF',
+  },
+};
+
+const parseYouTubeVideo = (url: string) => {
+  if (url.includes('/shorts/')) {
+    const id = url.split('/shorts/')[1]?.split(/[?#]/)[0];
+    return { embedUrl: `https://www.youtube.com/embed/${id}?autoplay=1`, isPortrait: true };
+  }
+  if (url.includes('v=')) {
+    const id = url.split('v=')[1]?.split(/[&#]/)[0];
+    return { embedUrl: `https://www.youtube.com/embed/${id}?autoplay=1`, isPortrait: false };
+  }
+  if (url.includes('youtu.be/')) {
+    const id = url.split('youtu.be/')[1]?.split(/[?#]/)[0];
+    return { embedUrl: `https://www.youtube.com/embed/${id}?autoplay=1`, isPortrait: false };
+  }
+  return { embedUrl: url, isPortrait: false };
 };
 
 export const ProjectDetailPage: React.FC = () => {
@@ -73,9 +179,20 @@ export const ProjectDetailPage: React.FC = () => {
   const t = translations[locale];
 
   const project = FEATURED_PROJECTS.find((p) => p.slug === slug);
+  const [prevSlug, setPrevSlug] = useState(slug);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [activeVideo, setActiveVideo] = useState<{
+    url: string;
+    isPortrait: boolean;
+    title: string;
+  } | null>(null);
+
+  if (slug !== prevSlug) {
+    setPrevSlug(slug);
+    setSelectedImageIndex(0);
+    setActiveVideo(null);
+  }
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -85,9 +202,9 @@ export const ProjectDetailPage: React.FC = () => {
   }, [slug, project]);
 
   useEffect(() => {
-    if (!isVideoModalOpen) return;
+    if (!activeVideo) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsVideoModalOpen(false);
+      if (e.key === 'Escape') setActiveVideo(null);
     };
     window.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
@@ -95,7 +212,7 @@ export const ProjectDetailPage: React.FC = () => {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
     };
-  }, [isVideoModalOpen]);
+  }, [activeVideo]);
 
   if (!project) {
     return (
@@ -115,6 +232,8 @@ export const ProjectDetailPage: React.FC = () => {
 
   const currentIdx = FEATURED_PROJECTS.findIndex((p) => p.slug === slug);
   const nextProject = FEATURED_PROJECTS[(currentIdx + 1) % FEATURED_PROJECTS.length];
+  const prevProject =
+    FEATURED_PROJECTS[(currentIdx - 1 + FEATURED_PROJECTS.length) % FEATURED_PROJECTS.length];
 
   const colors =
     COLOR_PAIRS[project.slug] || {
@@ -155,7 +274,7 @@ export const ProjectDetailPage: React.FC = () => {
               to="/"
               className="inline-flex items-center gap-2 rounded-full bg-[#FFFFFF] px-5 py-2.5 font-sans text-[14px] font-bold text-[#1E2330] shadow-sm transition-transform hover:scale-105 active:scale-95"
             >
-              ← {t.caseStudy.backToOverview}
+              {t.caseStudy.backToOverview}
             </Link>
           </div>
 
@@ -211,7 +330,14 @@ export const ProjectDetailPage: React.FC = () => {
                   <button
                     key={idx}
                     type="button"
-                    onClick={() => setIsVideoModalOpen(true)}
+                    onClick={() => {
+                      const parsed = parseYouTubeVideo(link.url);
+                      setActiveVideo({
+                        url: parsed.embedUrl,
+                        isPortrait: parsed.isPortrait,
+                        title: project.title,
+                      });
+                    }}
                     className="flex cursor-pointer items-center gap-2 rounded-full bg-[#FFFFFF] px-5 py-2 font-sans text-[13.5px] font-bold text-[#1E2330] shadow-sm transition-transform hover:scale-105 active:scale-95"
                   >
                     {renderLinkIcon(link.label)}
@@ -255,7 +381,7 @@ export const ProjectDetailPage: React.FC = () => {
                   className="max-h-[600px] w-auto max-w-full rounded-[18px] object-contain shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"
                 />
                 <div className="absolute top-4 right-4 rounded-full bg-black/60 px-4 py-1.5 font-sans text-[12px] font-bold text-white opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100">
-                  Full Screen ↗
+                  Full Screen
                 </div>
               </div>
 
@@ -271,9 +397,12 @@ export const ProjectDetailPage: React.FC = () => {
                         isPortrait ? 'h-28 w-14 bg-black p-1' : 'h-20 w-32 bg-black'
                       } ${
                         selectedImageIndex === idx
-                          ? 'border-[#254F1A] scale-105 opacity-100 shadow-md'
+                          ? 'scale-105 opacity-100 shadow-md'
                           : 'border-transparent opacity-60 hover:opacity-100'
                       }`}
+                      style={{
+                        borderColor: selectedImageIndex === idx ? colors.bg : 'transparent',
+                      }}
                     >
                       <img
                         src={img}
@@ -353,28 +482,55 @@ export const ProjectDetailPage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          NEXT PROJECT NAVIGATION BANNER
+          PREVIOUS / NEXT PROJECT NAVIGATION BANNER
       ========================================================================= */}
-      <section className="w-full bg-[#1E2330] py-16 text-white md:py-20">
+      <section className="w-full bg-[#1E2330] py-16 text-white md:py-20 border-t border-white/10">
         <div className="mx-auto max-w-[1240px] px-4 md:px-6">
-          <div className="flex flex-col items-start justify-between gap-6 rounded-[36px] bg-white/5 p-8 border border-white/10 md:flex-row md:items-center md:p-12">
-            <div>
-              <span className="font-sans text-[13px] font-black uppercase tracking-wider text-[#D2E823]">
-                {locale === 'en' ? 'Next Project' : 'Kolejny Projekt'}
-              </span>
-              <h3 className="mt-2 font-display text-[32px] font-black tracking-[-0.03em] text-white sm:text-[40px]">
-                {nextProject.title}
-              </h3>
-              <p className="mt-2 max-w-xl font-sans text-[15.5px] font-medium text-white/70">
-                {nextProject.shortDescription[locale]}
-              </p>
-            </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {/* Previous Project Card */}
+            <Link
+              to={`/projects/${prevProject.slug}`}
+              className="group flex flex-col justify-between rounded-[36px] bg-white/5 p-8 border border-white/10 transition-all duration-300 hover:bg-white/10 hover:-translate-y-1 md:p-10"
+            >
+              <div>
+                <span className="font-sans text-[12.5px] font-black uppercase tracking-wider text-[#D2E823]">
+                  {locale === 'en' ? 'Previous Project' : 'Poprzedni Projekt'}
+                </span>
+                <h3 className="mt-2 font-display text-[26px] font-black tracking-[-0.03em] text-white transition-colors group-hover:text-[#D2E823] sm:text-[30px]">
+                  {prevProject.title}
+                </h3>
+                <p className="mt-2 line-clamp-2 font-sans text-[15px] font-medium text-white/70">
+                  {prevProject.shortDescription[locale]}
+                </p>
+              </div>
+              <div className="mt-6">
+                <span className="inline-flex items-center rounded-full bg-white/10 px-5 py-2 font-sans text-[13px] font-bold text-white transition-colors group-hover:bg-[#D2E823] group-hover:text-[#1E2330]">
+                  {locale === 'en' ? 'Previous Case Study' : 'Poprzedni Projekt'}
+                </span>
+              </div>
+            </Link>
+
+            {/* Next Project Card */}
             <Link
               to={`/projects/${nextProject.slug}`}
-              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#D2E823] px-7 py-3.5 font-sans text-[14.5px] font-bold text-[#1E2330] shadow-lg transition-transform hover:scale-105 active:scale-95"
+              className="group flex flex-col justify-between rounded-[36px] bg-white/5 p-8 border border-white/10 transition-all duration-300 hover:bg-white/10 hover:-translate-y-1 md:p-10"
             >
-              <span>{locale === 'en' ? 'Explore Case Study' : 'Zobacz Case Study'}</span>
-              <span>→</span>
+              <div>
+                <span className="font-sans text-[12.5px] font-black uppercase tracking-wider text-[#D2E823]">
+                  {locale === 'en' ? 'Next Project' : 'Kolejny Projekt'}
+                </span>
+                <h3 className="mt-2 font-display text-[26px] font-black tracking-[-0.03em] text-white transition-colors group-hover:text-[#D2E823] sm:text-[30px]">
+                  {nextProject.title}
+                </h3>
+                <p className="mt-2 line-clamp-2 font-sans text-[15px] font-medium text-white/70">
+                  {nextProject.shortDescription[locale]}
+                </p>
+              </div>
+              <div className="mt-6">
+                <span className="inline-flex items-center rounded-full bg-[#D2E823] px-5 py-2 font-sans text-[13px] font-bold text-[#1E2330] shadow-md transition-transform group-hover:scale-105">
+                  {locale === 'en' ? 'Next Case Study' : 'Kolejny Projekt'}
+                </span>
+              </div>
             </Link>
           </div>
         </div>
@@ -385,21 +541,25 @@ export const ProjectDetailPage: React.FC = () => {
 
       {/* Embedded Video Modal */}
       <AnimatePresence>
-        {isVideoModalOpen && (
+        {activeVideo && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
-            onClick={() => setIsVideoModalOpen(false)}
+            onClick={() => setActiveVideo(null)}
           >
             <div
-              className="relative flex aspect-[9/16] h-[80vh] max-h-[720px] max-w-[90vw] flex-col overflow-hidden rounded-[36px] bg-[#1E2330] shadow-2xl"
+              className={`relative flex ${
+                activeVideo.isPortrait
+                  ? 'aspect-[9/16] h-[80vh] max-h-[720px] max-w-[90vw]'
+                  : 'aspect-[16/9] w-[90vw] max-w-[1000px]'
+              } flex-col overflow-hidden rounded-[36px] bg-[#1E2330] shadow-2xl`}
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 type="button"
-                onClick={() => setIsVideoModalOpen(false)}
+                onClick={() => setActiveVideo(null)}
                 className="absolute top-4 right-4 z-20 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-md transition-transform hover:scale-110 active:scale-95"
                 aria-label="Close video"
               >
@@ -407,8 +567,8 @@ export const ProjectDetailPage: React.FC = () => {
               </button>
 
               <iframe
-                src="https://www.youtube.com/embed/V51wDqSVl7A?autoplay=1"
-                title="ALEKSY Edge Voice Assistant Demo"
+                src={activeVideo.url}
+                title={`${activeVideo.title} Demo`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 className="h-full w-full"

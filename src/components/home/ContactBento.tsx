@@ -71,7 +71,7 @@ export const ContactBento: React.FC = () => {
             className="flex h-13 items-center gap-2.5 rounded-full bg-[#E9C0E9] px-7 font-sans text-[15px] font-bold text-[#1E2330] shadow-lg transition-transform hover:scale-105 active:scale-95"
           >
             <GitHubIcon className="h-4 w-4" />
-            <span>GitHub ↗</span>
+            <span>GitHub</span>
           </a>
 
           {/* LinkedIn */}
@@ -82,7 +82,7 @@ export const ContactBento: React.FC = () => {
             className="flex h-13 items-center gap-2.5 rounded-full bg-[#FFFFFF] px-7 font-sans text-[15px] font-bold text-[#1E2330] shadow-lg transition-transform hover:scale-105 active:scale-95"
           >
             <LinkedInIcon className="h-4 w-4" />
-            <span>LinkedIn ↗</span>
+            <span>LinkedIn</span>
           </a>
 
           {/* Download CV */}
@@ -92,7 +92,7 @@ export const ContactBento: React.FC = () => {
             rel="noopener noreferrer"
             className="flex h-13 items-center gap-2.5 rounded-full bg-[#254F1A] px-7 font-sans text-[15px] font-bold text-[#D2E823] shadow-lg transition-transform hover:scale-105 active:scale-95"
           >
-            <span>{t.contact.downloadCv} ↓</span>
+            <span>{t.contact.downloadCv}</span>
           </a>
         </div>
       </div>

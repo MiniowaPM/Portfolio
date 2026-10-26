@@ -361,7 +361,7 @@ export const EngineeringContextRow: React.FC = () => {
                   rel="noopener noreferrer"
                   className="inline-flex h-12 items-center rounded-full bg-[#254F1A] px-7 font-sans text-[14.5px] font-bold text-[#D2E823] shadow-md transition-transform hover:scale-105"
                 >
-                  @MiniowaPM on GitHub ↗
+                  @MiniowaPM on GitHub
                 </a>
               </div>
             </div>
@@ -419,7 +419,7 @@ export const EngineeringContextRow: React.FC = () => {
                     to="/about"
                     className="mt-2 block font-sans text-[13px] font-black text-[#254F1A] hover:underline"
                   >
-                    {locale === 'en' ? 'More team photos & story →' : 'Więcej zdjęć i historia zespołu →'}
+                    {locale === 'en' ? 'More team photos & story' : 'Więcej zdjęć i historia zespołu'}
                   </Link>
                 </div>
               </div>
@@ -427,7 +427,7 @@ export const EngineeringContextRow: React.FC = () => {
               {/* Card 2: Key Milestones & Recognition Card (Balances column height perfectly) */}
               <div className="rounded-[36px] bg-[#FFFFFF] p-6 shadow-md">
                 <span className="font-sans text-[12.5px] font-black uppercase tracking-wider text-[#254F1A]">
-                  {locale === 'en' ? 'Key Milestones & Leadership' : 'Osiągnięcia i Działalność'}
+                  {locale === 'en' ? 'Key Milestones & Experience' : 'Osiągnięcia i Działalność'}
                 </span>
 
                 <div className="mt-4 space-y-3.5">
@@ -437,10 +437,10 @@ export const EngineeringContextRow: React.FC = () => {
                     </span>
                     <div>
                       <h4 className="font-sans text-[14px] font-bold text-[#1E2330]">
-                        {locale === 'en' ? '1st Place Hackathon Winner' : '1. Miejsce w Hackathonie'}
+                        {locale === 'en' ? '1,000+ Downloads — PlanPM Launch' : 'Ponad 1000 Pobrań — PlanPM'}
                       </h4>
                       <p className="font-sans text-[12.5px] text-[#71717A]">
-                        {locale === 'en' ? 'Project ŁatwaUstawa (Open Gov APIs & Local LLMs)' : 'Projekt ŁatwaUstawa (API Sejmowe & LLM)'}
+                        {locale === 'en' ? 'Live on Google Play & App Store serving students & faculty' : 'Produkcja w Google Play i App Store dla studentów uczelni'}
                       </p>
                     </div>
                   </div>
@@ -451,10 +451,10 @@ export const EngineeringContextRow: React.FC = () => {
                     </span>
                     <div>
                       <h4 className="font-sans text-[14px] font-bold text-[#1E2330]">
-                        {locale === 'en' ? 'KNI Science Club Lead' : 'Lider w Kole Naukowym KNI'}
+                        {locale === 'en' ? 'KNI Science Club Activity' : 'Działalność w Kole Naukowym KNI'}
                       </h4>
                       <p className="font-sans text-[12.5px] text-[#71717A]">
-                        {locale === 'en' ? 'Architecture & Team Lead on PlanPM & NavigatorPM' : 'Architektura i koordynacja PlanPM oraz NavigatorPM'}
+                        {locale === 'en' ? 'Organizing tech conferences, competitions & university events' : 'Udział w konferencjach, konkursach i eventach uczelnianych'}
                       </p>
                     </div>
                   </div>

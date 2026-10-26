@@ -113,7 +113,7 @@ export const HeroBento: React.FC = () => {
               className="flex h-12 items-center gap-2 rounded-full bg-[#D2E823] px-5 font-sans text-[14.5px] font-bold text-[#1E2330] shadow-sm transition-transform hover:scale-[1.03] active:scale-95"
             >
               <GitHubIcon className="h-4 w-4" />
-              <span>GitHub ↗</span>
+              <span>GitHub</span>
             </a>
 
             {/* LinkedIn */}
@@ -124,7 +124,7 @@ export const HeroBento: React.FC = () => {
               className="flex h-12 items-center gap-2 rounded-full bg-[#D2E823] px-5 font-sans text-[14.5px] font-bold text-[#1E2330] shadow-sm transition-transform hover:scale-[1.03] active:scale-95"
             >
               <LinkedInIcon className="h-4 w-4" />
-              <span>LinkedIn ↗</span>
+              <span>LinkedIn</span>
             </a>
 
             {/* Copy Email */}
