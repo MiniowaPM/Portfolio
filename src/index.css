@@ -1,42 +1,89 @@
 @import 'tailwindcss';
-@plugin 'daisyui';
 
-@plugin 'daisyui/theme' {
-  name: 'retro';
-}
-@plugin 'daisyui/theme' {
-  name: 'abyss';
+@theme {
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-canopy-green: #254F1A;
+  --color-electric-lime: #D2E823;
+  --color-alabaster: #F3F3F1;
+  --color-soft-rose: #E9C0E9;
+  --color-deep-burgundy: #780016;
+  --color-royal-plum: #502274;
+  --color-cobalt-blue: #0B3B59;
+  --color-ice-blue: #B8E8FC;
+  --color-charcoal: #1E2330;
+  --color-pure-white: #FFFFFF;
+
+  --radius-navbar: 9999px;
+  --radius-card: 36px;
+  --radius-media: 24px;
+  --radius-pill: 9999px;
 }
 
-@plugin 'daisyui/theme' {
-  name: 'calm';
-  --color-primary: #1ca3ec;
-  --color-secondary: #fcd34d;
-  --color-accent: #0ea5e9;
-  --color-neutral: #1e293b;
-  --color-base-100: #f8fafc;
-  --color-base-content: #0f172a;
-  --color-info: #38bdf8;
-  --color-success: #4ade80;
-  --color-warning: #fbbf24;
-  --color-error: #f87171;
-}
-
-@plugin 'daisyui/theme' {
-  name: 'storm';
-  --color-primary: #3b82f6;
-  --color-secondary: #fbbf24;
-  --color-accent: #94a3b8;
-  --color-neutral: #0f172a;
-  --color-base-100: #061d3d;
-  --color-base-content: #f1f5f9;
-  --color-info: #60a5fa;
-  --color-success: #34d399;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
+html {
+  color: #1E2330;
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  overflow: hidden;
+  min-height: 100vh;
+  background-color: #254F1A;
+  color: #1E2330;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Custom scrollbar matching Linktree clean aesthetic */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F3F3F1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D5D5CE;
+  border-radius: 9999px;
+  border: 2px solid #F3F3F1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #254F1A;
+}
+
+@keyframes waveHorizontal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-wave-h {
+  animation: waveHorizontal 4s linear infinite;
+}
+
+.animate-wave-h-reverse {
+  animation: waveHorizontal 6s linear infinite reverse;
+}
+
+@keyframes rotorSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-rotor {
+  animation: rotorSpin 0.15s linear infinite;
+  transform-origin: center;
 }
