@@ -247,7 +247,6 @@ export const ProjectDetailPage: React.FC = () => {
     };
 
   const selectedImage = project.images[selectedImageIndex] || project.images[0] || null;
-  const isPortrait = project.slug === 'plan-pm';
 
   const renderLinkIcon = (label: string) => {
     const l = label.toLowerCase();
@@ -387,15 +386,13 @@ export const ProjectDetailPage: React.FC = () => {
 
               {/* Thumbnails Row */}
               {project.images.length > 1 && (
-                <div className="mt-5 flex gap-3 overflow-x-auto pb-1">
+                <div className="mt-5 flex gap-3 overflow-x-auto py-1 px-1">
                   {project.images.map((img, idx) => (
                     <button
                       key={idx}
                       type="button"
                       onClick={() => setSelectedImageIndex(idx)}
-                      className={`relative shrink-0 cursor-pointer overflow-hidden rounded-[16px] border-2 transition-all ${
-                        isPortrait ? 'h-28 w-14 bg-black p-1' : 'h-20 w-32 bg-black'
-                      } ${
+                      className={`relative flex h-24 min-w-[64px] max-w-[130px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-[16px] border-2 bg-black/95 p-1.5 transition-all ${
                         selectedImageIndex === idx
                           ? 'scale-105 opacity-100 shadow-md'
                           : 'border-transparent opacity-60 hover:opacity-100'
@@ -407,7 +404,7 @@ export const ProjectDetailPage: React.FC = () => {
                       <img
                         src={img}
                         alt={`Thumbnail ${idx + 1}`}
-                        className={`h-full w-full ${isPortrait ? 'object-contain' : 'object-cover'}`}
+                        className="h-full w-auto max-w-full rounded-[6px] object-contain select-none"
                       />
                     </button>
                   ))}

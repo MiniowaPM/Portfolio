@@ -25,12 +25,12 @@ export const PHOTO_DATA: Record<number, PhotoItem[]> = {
   ],
   // 2: Teamwork & Hackathons
   2: [
-    { src: '/images/HeroPage/Projects/1.jpg', caption: { en: 'Engineering Focus', pl: 'Pełne Skupienie' } },
-    { src: '/images/HeroPage/Projects/2.jpg', caption: { en: 'Architecture & Coding', pl: 'Praca nad Kodem' } },
-    { src: '/images/HeroPage/Projects/3.jpg', caption: { en: 'Collaborative Sprint', pl: 'Współpraca Zespołowa' } },
-    { src: '/images/HeroPage/Projects/4.jpg', caption: { en: 'Deployment & Verification', pl: 'Testy i Wdrożenie' } },
-    { src: '/images/HeroPage/Projects/5.jpg', caption: { en: 'Late Night Debugging', pl: 'Nocny Sprint Projektowy' } },
-    { src: '/images/HeroPage/Projects/6.jpg', caption: { en: 'Post-Release Milestone', pl: 'Odpoczynek po Wydaniu' } },
+    { src: '/images/HeroPage/Projects/1.jpg', caption: { en: 'GlobalLogic — World of Drones Engineering Focus', pl: 'GlobalLogic — World of Drones i skupienie inżynierskie' } },
+    { src: '/images/HeroPage/Projects/2.jpg', caption: { en: 'GlobalLogic — IoT Hardware Architecture', pl: 'GlobalLogic — Praca nad architekturą IoT' } },
+    { src: '/images/HeroPage/Projects/3.jpg', caption: { en: 'HackNation 2025 — Teamwork on ŁatwaUstawa', pl: 'HackNation 2025 — Praca zespołowa nad ŁatwaUstawa' } },
+    { src: '/images/HeroPage/Projects/4.jpg', caption: { en: 'HackNation 2025 — Backend & API Verification', pl: 'HackNation 2025 — Weryfikacja backendu i API' } },
+    { src: '/images/HeroPage/Projects/5.jpg', caption: { en: 'HackNation 2025 — Late Night Hackathon Sprint', pl: 'HackNation 2025 — Nocny sprint hackathonowy' } },
+    { src: '/images/HeroPage/Projects/6.jpg', caption: { en: 'HackNation 2025 — Final Project Milestone', pl: 'HackNation 2025 — Zakończenie prac i finał' } },
   ],
   // 3: Lifestyle & Moments
   3: [

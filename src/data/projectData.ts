@@ -233,11 +233,13 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
     ],
     images: [
       '/images/WorldOfDrones/1.jpg',
-      '/images/WorldOfDrones/2.jpg',
+      '/images/WorldOfDrones/2.jpeg',
       '/images/WorldOfDrones/3.jpg',
       '/images/WorldOfDrones/4.jpg',
       '/images/WorldOfDrones/5.jpg',
       '/images/WorldOfDrones/6.jpg',
+      '/images/WorldOfDrones/7.jpg',
+      '/images/WorldOfDrones/8.jpg',
     ],
     caseStudy: {
       lead: {
@@ -396,6 +398,15 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
       '/images/NavigatorPM/1.png',
       '/images/NavigatorPM/2.png',
       '/images/NavigatorPM/3.png',
+      '/images/NavigatorPM/4.png',
+      '/images/NavigatorPM/5.png',
+      '/images/NavigatorPM/6.png',
+      '/images/NavigatorPM/7.png',
+      '/images/NavigatorPM/8.png',
+      '/images/NavigatorPM/9.png',
+      '/images/NavigatorPM/10.png',
+      '/images/NavigatorPM/11.png',
+      '/images/NavigatorPM/12.png',
     ],
     caseStudy: {
       lead: {
@@ -526,9 +537,11 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
         ],
       },
       relatedTeamPhotos: [
-        '/images/HeroPage/Projects/3.jpg',
-        '/images/HeroPage/Projects/5.jpg',
-        '/images/HeroPage/Projects/6.jpg',
+        '/images/Hackyeah2026/1.jpeg',
+        '/images/Hackyeah2026/2.jpeg',
+        '/images/Hackyeah2026/3.jpeg',
+        '/images/Hackyeah2026/4.jpeg',
+        '/images/Hackyeah2026/5.jpeg',
       ],
     },
   },
@@ -624,7 +637,10 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
         primary: true,
       },
     ],
-    images: [],
+    images: [
+      '/images/LatwaUstawa/1.png',
+      '/images/LatwaUstawa/2.png',
+    ],
     caseStudy: {
       lead: {
         en: 'Civic-tech mobile application democratizing Polish parliamentary legislation through AI, developed during HackNation 2025. Mikołaj served as the dedicated Backend Developer.',
@@ -666,7 +682,12 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
           'Udowodniona efektywność łączenia otwartych API sektora publicznego z modelami językowymi w architekturze mikroserwisowej.',
         ],
       },
-      relatedTeamPhotos: [],
+      relatedTeamPhotos: [
+        '/images/HeroPage/Projects/3.jpg',
+        '/images/HeroPage/Projects/4.jpg',
+        '/images/HeroPage/Projects/5.jpg',
+        '/images/HeroPage/Projects/6.jpg',
+      ],
     },
   },
   {
@@ -695,7 +716,10 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
         primary: true,
       },
     ],
-    images: [],
+    images: [
+      '/images/Edek/1.png',
+      '/images/Edek/2.png',
+    ],
     caseStudy: {
       lead: {
         en: 'Lightweight semantic Question-Answering chatbot (Eksperymentalny Doradca Emitujący Komunikaty) combining a zero-cold-start Flask AI backend with a responsive PHP interface.',
@@ -756,7 +780,12 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
         primary: true,
       },
     ],
-    images: [],
+    images: [
+      '/images/Reptilia/1.png',
+      '/images/Reptilia/2.png',
+      '/images/Reptilia/3.png',
+      '/images/Reptilia/4.png',
+    ],
     caseStudy: {
       lead: {
         en: 'Cross-platform desktop music management and studio distribution application (formerly BetterSpotify) built with Vue.js, Electron, and FastAPI for independent audio studios and music fans.',
@@ -815,7 +844,10 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
         primary: true,
       },
     ],
-    images: [],
+    images: [
+      '/images/YoutubeButWorst/1.png',
+      '/images/YoutubeButWorst/2.png',
+    ],
     caseStudy: {
       lead: {
         en: 'An educational full-stack prototype exploring the architectural mechanics of video hosting, byte-range streaming, and Spring Boot service design.',
@@ -879,7 +911,10 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
         primary: false,
       },
     ],
-    images: [],
+    images: [
+      '/images/CryptoApp/1.png',
+      '/images/CryptoApp/2.png',
+    ],
     caseStudy: {
       lead: {
         en: 'An interactive cryptographic education suite deployed live on Streamlit Cloud, visualizing symmetric AES encryption/decryption and SHA hashing algorithms with live parameter adjustments.',
@@ -940,7 +975,10 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
         primary: true,
       },
     ],
-    images: [],
+    images: [
+      '/images/MatrixCalc/1.png',
+      '/images/MatrixCalc/2.png',
+    ],
     caseStudy: {
       lead: {
         en: 'Cross-platform desktop linear algebra calculator built in C++ with the wxWidgets framework, featuring custom memory layouts and numerical matrix operations.',
@@ -1006,7 +1044,11 @@ export const FEATURED_PROJECTS: FeaturedProject[] = [
         primary: true,
       },
     ],
-    images: ['/images/TicketMaster/1.png'],
+    images: [
+      '/images/TicketMaster/1.png',
+      '/images/TicketMaster/2.png',
+      '/images/TicketMaster/3.png',
+    ],
     caseStudy: {
       lead: {
         en: 'High-speed desktop ticket automation and queue sniper (eBilet Sniper) built in Python with Playwright Stealth and CustomTkinter, designed to level the playing field during high-demand event ticket releases.',
