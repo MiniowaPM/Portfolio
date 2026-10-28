@@ -52,7 +52,7 @@ export const Navbar: React.FC = () => {
     <header className="fixed top-5 right-0 left-0 z-50 mx-auto w-[calc(100%-32px)] max-w-[1240px]">
       <nav
         aria-label="Global Navigation"
-        className="flex h-[72px] w-full items-center justify-between rounded-full bg-[#FFFFFF] pl-7 pr-3.5 shadow-[0_8px_30px_rgba(0,0,0,0.12)] md:pl-8 md:pr-4"
+        className="flex h-[72px] w-full items-center justify-between rounded-full bg-[#FFFFFF]/95 backdrop-blur-md pl-7 pr-3.5 shadow-[0_14px_38px_rgba(0,0,0,0.15),0_3px_8px_rgba(0,0,0,0.06)] border border-black/[0.08] md:pl-8 md:pr-4"
       >
         {/* Left: Brand Name Wordmark */}
         <Link
@@ -177,7 +177,7 @@ export const Navbar: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.98 }}
             transition={{ duration: 0.2 }}
-            className="mt-2.5 flex flex-col gap-1.5 rounded-[28px] bg-[#FFFFFF] p-3 shadow-[0_16px_40px_rgba(0,0,0,0.16)] sm:hidden border border-black/5"
+            className="mt-2.5 flex flex-col gap-1.5 rounded-[28px] bg-[#FFFFFF]/95 backdrop-blur-md p-3 shadow-[0_22px_50px_rgba(0,0,0,0.18),0_6px_16px_rgba(0,0,0,0.08)] sm:hidden border border-black/[0.08]"
           >
             {location.pathname === '/' ? (
               <button
